@@ -81,6 +81,7 @@ La comunicación entre clientes opera de manera transparente usando el canal int
 |---|---|---|
 | `/companion` | `/wpcomp`, `/companion status` | Despliega en el chat local el resumen de addons y modos de los miembros del grupo. |
 | `/companion scan` | `/wpcomp scan` | Fuerza un broadcast manual inmediato y solicita telemetría a los compañeros. |
+| `/companion channel <chan>` | `/wpcomp channel` | Configura el canal de felicitación de BattlePass (`group`, `party`, `say`, `off`). |
 | `/companion debug` | `/wpcomp debug` | Activa o desactiva la salida de depuración en tiempo real en la consola de chat. |
 
 ---

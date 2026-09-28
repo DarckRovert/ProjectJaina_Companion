@@ -9,8 +9,7 @@ local C = WoWPeru_Companion
 
 C.Config = {
     Version         = "1.0.1",
-    AnnounceChannel = "GROUP",   -- GROUP | PARTY | SAY | ninguno ("")
-    ShowMinimapBadge = true,
+    AnnounceChannel = "GROUP",   -- GROUP | PARTY | SAY | OFF ("")
     Debug           = false,
 
     -- Addons del ecosistema a detectar

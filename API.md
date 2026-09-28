@@ -13,7 +13,6 @@ WoWPeru_Companion = {
     Config = {
         Version          = "1.0.1",
         AnnounceChannel  = "GROUP",   -- "GROUP" | "PARTY" | "SAY" | ""
-        ShowMinimapBadge = true,
         Debug            = false,
         EcosystemAddons  = { ... },
         AddonPrefix      = "WP_COMP",
