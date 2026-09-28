@@ -2,7 +2,7 @@
 ## Title: |cFFD4AF37WoW Perú|r - Companion
 ## Notes: Hub social ligero del ecosistema WoW Perú. Muestra addons activos en el grupo, badge de modo de juego y anuncios de BattlePass.
 ## Author: DarckRovert (Ingame: Elnazzareno) & WoW Perú Team
-## Version: 1.0.0
+## Version: 1.0.1
 ## SavedVariables: WoWPeruCompanion_DB
 
 Config.lua

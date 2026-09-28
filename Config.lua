@@ -8,7 +8,7 @@ WoWPeru_Companion = WoWPeru_Companion or {}
 local C = WoWPeru_Companion
 
 C.Config = {
-    Version         = "1.0.0",
+    Version         = "1.0.1",
     AnnounceChannel = "GROUP",   -- GROUP | PARTY | SAY | ninguno ("")
     ShowMinimapBadge = true,
     Debug           = false,

@@ -1,0 +1,26 @@
+# WoW Cache & temporales
+*.bak
+*.tmp
+*.old
+*.log
+.DS_Store
+Thumbs.db
+
+# WoW SavedVariables (datos locales de cuenta)
+**/SavedVariables/*.lua
+**/SavedVariables/*.lua.bak
+
+# Archivos de empaquetado y releases
+*.zip
+*.tar.gz
+
+# IDEs
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
