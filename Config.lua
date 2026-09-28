@@ -16,6 +16,7 @@ C.Config = {
     -- Addons del ecosistema a detectar
     EcosystemAddons = {
         { name = "WoWPeru_BattlePass",  label = "BattlePass", color = "FFD4AF37" },
+        { name = "WoWPeru_Companion",   label = "Companion",  color = "FFAB47BC" },
         { name = "WoWPeru_GameModes",   label = "GameModes",  color = "FF4FC3F7" },
         { name = "WoWPeru_RaidSuite",   label = "RaidSuite",  color = "FF81C784" },
         { name = "WowPeruVisualShop",   label = "VisualShop", color = "FFCE93D8" },

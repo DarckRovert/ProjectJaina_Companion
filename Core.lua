@@ -34,9 +34,9 @@ local function CPrint(msg)
 end
 
 local function IsAddonLoaded(name)
-    -- IsAddOnLoaded existe en 3.3.5a
-    local loaded = IsAddOnLoaded(name)
-    return loaded and true or false
+    if not name or not _G.IsAddOnLoaded then return false end
+    local loaded = _G.IsAddOnLoaded(name)
+    return (loaded and true) or false
 end
 
 local function GetLocalGameMode()
@@ -44,6 +44,17 @@ local function GetLocalGameMode()
        and WoWPeru_GameModes_CharDB.hasSelectedMode
        and WoWPeru_GameModes_CharDB.selectedMode then
         return WoWPeru_GameModes_CharDB.selectedMode
+    end
+    -- Fallback resiliente a cabinas de internet (WTF reseteado): Escanear auras del servidor
+    for i = 1, 40 do
+        local auraName = UnitAura("player", i)
+        if not auraName then break end
+        local lower = auraName:lower()
+        if lower:find("hardcore") then
+            return "HARDCORE"
+        elseif lower:find("ironman") then
+            return "IRONMAN"
+        end
     end
     return "NORMAL"
 end
@@ -135,7 +146,7 @@ local function CheckBattlePassLevelUp()
         -- Subida de nivel detectada
         local playerName = UnitName("player") or "Desconocido"
         local msg = string.format(
-            "|cFFD4AF37[BattlePass]|r %s alcanzo el Nivel %d del Pase de Batalla! |cFF888888(/bp)|r",
+            "[BattlePass] %s alcanzo el Nivel %d del Pase de Batalla! (/bp)",
             playerName, newLevel
         )
         AnnounceToGroup(msg)
@@ -160,7 +171,8 @@ local function PrintGroupStatus()
         if data.mode == "HARDCORE" then modeStr = " |cFFFF3333[HC]|r"
         elseif data.mode == "IRONMAN" then modeStr = " |cFFFF9900[IM]|r"
         end
-        CPrint(string.format("  %s%s: %s", name, modeStr, table.concat(addonNames, ", ")))
+        local listStr = (#addonNames > 0) and table.concat(addonNames, ", ") or "(solo Companion)"
+        CPrint(string.format("  %s%s: %s", name, modeStr, listStr))
     end
     if count == 0 then
         CPrint("  No hay datos de companeros aun. (Usa /companion scan)")
@@ -225,6 +237,8 @@ eventFrame:SetScript("OnEvent", function(self, event, ...)
         if WoWPeru_BattlePass and WoWPeru_BattlePass.Data then
             lastBPLevel = WoWPeru_BattlePass.Data.level or 0
         end
+        -- Si ya está en grupo al loguear/reload, anunciar status
+        BroadcastStatus()
 
     elseif event == "CHAT_MSG_ADDON" then
         local prefix, message, channel, sender = ...
