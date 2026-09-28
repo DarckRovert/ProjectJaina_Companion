@@ -54,10 +54,12 @@ end
 local function AnnounceToGroup(msg)
     local ch = C.Config.AnnounceChannel
     if not ch or ch == "" then return end
+    local inRaid = (GetNumRaidMembers and GetNumRaidMembers() > 0)
+    local inParty = (GetNumPartyMembers and GetNumPartyMembers() > 0)
     if (ch == "GROUP" or ch == "PARTY") then
-        if IsInRaid() then
+        if inRaid then
             SendChatMessage(msg, "RAID")
-        elseif GetNumPartyMembers() > 0 then
+        elseif inParty then
             SendChatMessage(msg, "PARTY")
         end
     elseif ch == "SAY" then
@@ -84,13 +86,20 @@ end
 local function BroadcastStatus()
     local playerName = UnitName("player")
     if not playerName or playerName == "" then return end
+    local inRaid = (GetNumRaidMembers and GetNumRaidMembers() > 0)
+    local inParty = (GetNumPartyMembers and GetNumPartyMembers() > 0)
+    if not inRaid and not inParty then return end
+
     local payload = BuildMyAddonPayload()
     if #payload > 200 then return end  -- guardia de 255 bytes
     if RegisterAddonMessagePrefix then
         RegisterAddonMessagePrefix(C.Config.AddonPrefix)
     end
-    SendAddonMessage(C.Config.AddonPrefix, payload, "RAID")
-    SendAddonMessage(C.Config.AddonPrefix, payload, "PARTY")
+    if inRaid then
+        SendAddonMessage(C.Config.AddonPrefix, payload, "RAID")
+    elseif inParty then
+        SendAddonMessage(C.Config.AddonPrefix, payload, "PARTY")
+    end
 end
 
 -- ================================================================
@@ -182,7 +191,8 @@ local eventFrame = CreateFrame("Frame", "WoWPeruCompanion_Frame")
 eventFrame:RegisterEvent("ADDON_LOADED")
 eventFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
 eventFrame:RegisterEvent("CHAT_MSG_ADDON")
-eventFrame:RegisterEvent("GROUP_ROSTER_UPDATE")
+eventFrame:RegisterEvent("RAID_ROSTER_UPDATE")
+eventFrame:RegisterEvent("PARTY_MEMBERS_CHANGED")
 
 -- Ticker liviano para revisar BattlePass level-up (cada 5 seg)
 local tickElapsed = 0
@@ -230,7 +240,7 @@ eventFrame:SetScript("OnEvent", function(self, event, ...)
             end
         end
 
-    elseif event == "GROUP_ROSTER_UPDATE" then
+    elseif event == "RAID_ROSTER_UPDATE" or event == "PARTY_MEMBERS_CHANGED" then
         -- Al unirse al grupo, broadcast propio y solicitar los demás
         local elapsed_delay = 0
         local delayFrame = CreateFrame("Frame")
