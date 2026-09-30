@@ -77,18 +77,33 @@ local function GetLocalGameMode()
 end
 
 -- ================================================================
+-- DETECCIÓN UNIFICADA DE CANAL DE GRUPO (PVE + PVP BATTLEGROUNDS)
+-- ================================================================
+local function GetGroupChannel()
+    if IsInInstance then
+        local inInstance, instanceType = IsInInstance()
+        if inInstance and instanceType == "pvp" then
+            return "BATTLEGROUND"
+        end
+    end
+    if GetNumRaidMembers and GetNumRaidMembers() > 0 then
+        return "RAID"
+    elseif GetNumPartyMembers and GetNumPartyMembers() > 0 then
+        return "PARTY"
+    end
+    return nil
+end
+
+-- ================================================================
 -- ANUNCIO AL GRUPO (LIMPIO DE CÓDIGOS DE COLOR |c)
 -- ================================================================
 local function AnnounceToGroup(msg)
     local ch = C.Config.AnnounceChannel
     if not ch or ch == "" or ch == "OFF" or ch == "NONE" then return end
-    local inRaid = (GetNumRaidMembers and GetNumRaidMembers() > 0)
-    local inParty = (GetNumPartyMembers and GetNumPartyMembers() > 0)
     if (ch == "GROUP" or ch == "PARTY") then
-        if inRaid then
-            SendChatMessage(msg, "RAID")
-        elseif inParty then
-            SendChatMessage(msg, "PARTY")
+        local target = GetGroupChannel()
+        if target then
+            SendChatMessage(msg, target)
         end
     elseif ch == "SAY" then
         SendChatMessage(msg, "SAY")
@@ -99,9 +114,8 @@ end
 -- LIMPIEZA DE MIEMBROS DESCONECTADOS / GRUPO DISUELTO
 -- ================================================================
 local function PruneGroupStatus()
-    local inRaid = (GetNumRaidMembers and GetNumRaidMembers() > 0)
-    local inParty = (GetNumPartyMembers and GetNumPartyMembers() > 0)
-    if not inRaid and not inParty then
+    local targetChannel = GetGroupChannel()
+    if not targetChannel then
         for k in pairs(groupAddonStatus) do
             groupAddonStatus[k] = nil
         end
@@ -112,13 +126,13 @@ local function PruneGroupStatus()
     local myName = UnitName("player")
     if myName then currentMembers[myName] = true end
 
-    if inRaid then
+    if targetChannel == "RAID" or targetChannel == "BATTLEGROUND" then
         local count = GetNumRaidMembers()
         for i = 1, count do
             local name = UnitName("raid" .. i)
             if name then currentMembers[name] = true end
         end
-    elseif inParty then
+    elseif targetChannel == "PARTY" then
         local count = GetNumPartyMembers()
         for i = 1, count do
             local name = UnitName("party" .. i)
@@ -151,9 +165,8 @@ end
 local function BroadcastStatus()
     local playerName = UnitName("player")
     if not playerName or playerName == "" then return end
-    local inRaid = (GetNumRaidMembers and GetNumRaidMembers() > 0)
-    local inParty = (GetNumPartyMembers and GetNumPartyMembers() > 0)
-    if not inRaid and not inParty then return end
+    local targetChannel = GetGroupChannel()
+    if not targetChannel then return end
 
     local payload = BuildMyAddonPayload()
     if #payload > 200 then return end  -- guardia estricta de 255 bytes
@@ -162,11 +175,7 @@ local function BroadcastStatus()
         RegisterAddonMessagePrefix(C.Config.AddonPrefix)
     end
 
-    if inRaid then
-        SendAddonMessage(C.Config.AddonPrefix, payload, "RAID")
-    elseif inParty then
-        SendAddonMessage(C.Config.AddonPrefix, payload, "PARTY")
-    end
+    SendAddonMessage(C.Config.AddonPrefix, payload, targetChannel)
 end
 
 -- ================================================================
@@ -228,10 +237,8 @@ end
 local function PrintGroupStatus()
     PruneGroupStatus()
 
-    local inRaid = (GetNumRaidMembers and GetNumRaidMembers() > 0)
-    local inParty = (GetNumPartyMembers and GetNumPartyMembers() > 0)
-
-    if not inRaid and not inParty then
+    local targetChannel = GetGroupChannel()
+    if not targetChannel then
         local myMode = GetLocalGameMode()
         local modeStr = ""
         if myMode == "HARDCORE" then modeStr = " |cFFFF3333[HARDCORE]|r"
