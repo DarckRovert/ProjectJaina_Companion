@@ -396,14 +396,27 @@ end
 -- BOTÓN DE MINIMAPA OFICIAL CON EL LOGO DE WOW PERÚ
 -- ================================================================
 local minimapBtn = nil
+local DEFAULT_COMPANION_ANGLE = 165
+local MINIMAP_RADIUS = 80
+
+local function UpdateMinimapBtnPosition(button, angle)
+    local rad = math.rad(angle)
+    local x = math.cos(rad) * MINIMAP_RADIUS
+    local y = math.sin(rad) * MINIMAP_RADIUS
+    button:ClearAllPoints()
+    button:SetPoint("CENTER", Minimap, "CENTER", x, y)
+end
+
 local function CreateMinimapButton()
     if minimapBtn then return minimapBtn end
     local btn = CreateFrame("Button", "WoWPeru_CompanionMinimapBtn", Minimap)
     btn:SetSize(31, 31)
     btn:SetFrameStrata("MEDIUM")
     btn:SetFrameLevel(8)
-    btn:SetPoint("TOPLEFT", Minimap, "TOPLEFT", 10, -10)
+    btn:EnableMouse(true)
+    btn:SetMovable(true)
     btn:RegisterForClicks("LeftButtonUp", "RightButtonUp")
+    btn:RegisterForDrag("LeftButton", "RightButton")
     btn:SetHighlightTexture("Interface\\Minimap\\UI-Minimap-ZoomButton-Highlight")
 
     local icon = btn:CreateTexture(nil, "BACKGROUND")
@@ -416,6 +429,34 @@ local function CreateMinimapButton()
     border:SetPoint("TOPLEFT", btn, "TOPLEFT", 0, 0)
     border:SetTexture("Interface\\Minimap\\MiniMap-TrackingBorder")
 
+    local wasDragged = false
+    local function OnDragUpdate(self)
+        local mx, my = Minimap:GetCenter()
+        local px, py = GetCursorPosition()
+        local scale = Minimap:GetEffectiveScale()
+        px, py = px / scale, py / scale
+
+        local angle = math.deg(math.atan2(py - my, px - mx))
+        if angle < 0 then angle = angle + 360 end
+
+        WoWPeruCompanion_DB = WoWPeruCompanion_DB or {}
+        WoWPeruCompanion_DB.minimapAngle = angle
+
+        UpdateMinimapBtnPosition(self, angle)
+        wasDragged = true
+    end
+
+    btn:SetScript("OnDragStart", function(self)
+        wasDragged = false
+        self:LockHighlight()
+        self:SetScript("OnUpdate", OnDragUpdate)
+    end)
+
+    btn:SetScript("OnDragStop", function(self)
+        self:UnlockHighlight()
+        self:SetScript("OnUpdate", nil)
+    end)
+
     btn:SetScript("OnEnter", function(self)
         GameTooltip:SetOwner(self, "ANCHOR_LEFT")
         GameTooltip:AddLine("|cFFD4AF37WoW Perú Companion|r", 1, 1, 1)
@@ -424,18 +465,26 @@ local function CreateMinimapButton()
         GameTooltip:AddLine(" ")
         GameTooltip:AddLine("|cFFFFD100Click Izquierdo:|r Solicitar escaneo P2P", 0.2, 1, 0.2)
         GameTooltip:AddLine("|cFFFFD100Click Derecho:|r Imprimir estado del grupo", 0.2, 0.8, 1)
+        GameTooltip:AddLine("|cFF888888Arrastrar para reposicionar|r", 0.7, 0.7, 0.7)
         GameTooltip:Show()
     end)
     btn:SetScript("OnLeave", function()
         GameTooltip:Hide()
     end)
     btn:SetScript("OnClick", function(self, button)
+        if wasDragged then
+            wasDragged = false
+            return
+        end
         if button == "RightButton" then
             PrintGroupStatus()
         else
             RequestGroupScan()
         end
     end)
+
+    local savedAngle = (WoWPeruCompanion_DB and WoWPeruCompanion_DB.minimapAngle) or DEFAULT_COMPANION_ANGLE
+    UpdateMinimapBtnPosition(btn, savedAngle)
 
     minimapBtn = btn
     return btn
