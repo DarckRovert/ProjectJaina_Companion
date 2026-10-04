@@ -4,6 +4,16 @@ Todas las modificaciones notables de este proyecto están documentadas en este a
 
 ---
 
+## [1.0.2] - 2026-10-04
+
+### 🌐 Sincronización P2P y Mitigación de Colisiones (Fix #1)
+- **Handshake P2P Bidireccional (`Core.lua`):**
+  - Implementado protocolo de descubrimiento bidireccional mediante `WP_SCAN_REQ` y respuesta `WP_SCAN_RES`.
+  - Agregado jitter aleatorio anti-colisión en la respuesta para evitar ráfagas simultáneas de paquetes de chat de addon cuando varios clientes ingresan al grupo/banda al mismo tiempo.
+  - Sincronización reactiva inmediata con `WoWPeru_GameModes` eliminando condiciones de carrera en cabinas de internet.
+
+---
+
 ## [1.0.1] - 2026-09-28
 
 ### 🛡️ Blindaje y Compatibilidad WotLK 3.3.5a (Build 12340)

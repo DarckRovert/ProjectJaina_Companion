@@ -15,6 +15,34 @@
     - Zero heap thrashing: reuso de timers, sin CreateFrame dinámico en cada evento.
 ]]
 
+-- ================================================================
+-- SYSTEM HOTFIX: FrameXML / ChatFrame CHANNEL_NOTICE Nil Guard
+-- Protege contra crash en ChatFrame.lua:2802 si el servidor envía notices no definidas en GlobalStrings
+-- ================================================================
+if not _G.CHAT_NOT_IN_LFG_NOTICE then
+    _G.CHAT_NOT_IN_LFG_NOTICE = "|Hchannel:%d|h[%s]|h Debes unirte a la cola de Buscar grupo para poder participar en este canal."
+end
+if not _G.CHAT_NOT_IN_LFG_NOTICE_BN then
+    _G.CHAT_NOT_IN_LFG_NOTICE_BN = "|Hchannel:CHANNEL:%d|h[%s]|h Debes unirte a la cola de Buscar grupo para poder participar en este canal."
+end
+
+local _Orig_ChatFrame_MessageEventHandler = _G.ChatFrame_MessageEventHandler
+if _Orig_ChatFrame_MessageEventHandler then
+    _G.ChatFrame_MessageEventHandler = function(self, event, ...)
+        if event == "CHAT_MSG_CHANNEL_NOTICE" or event == "CHAT_MSG_CHANNEL_NOTICE_USER" then
+            local noticeType = ...
+            if noticeType then
+                local bnKey = "CHAT_" .. tostring(noticeType) .. "_NOTICE_BN"
+                local stdKey = "CHAT_" .. tostring(noticeType) .. "_NOTICE"
+                if not _G[bnKey] and not _G[stdKey] then
+                    _G[stdKey] = "|Hchannel:%d|h[%s]|h [" .. tostring(noticeType) .. "]"
+                end
+            end
+        end
+        return _Orig_ChatFrame_MessageEventHandler(self, event, ...)
+    end
+end
+
 WoWPeru_Companion = WoWPeru_Companion or {}
 local C = WoWPeru_Companion
 
@@ -179,11 +207,28 @@ local function BroadcastStatus()
 end
 
 -- ================================================================
--- SECCIÓN 2: RECEPCIÓN DE STATUS DE COMPAÑEROS
+-- SECCIÓN 2: RECEPCIÓN DE STATUS Y PROTOCOLO P2P BIDIRECCIONAL
 -- ================================================================
+local responseJitterTimer = 0
+local responseJitterTarget = 0
+local responsePending = false
+
 local function ParseAddonMessage(sender, message)
     if not sender or sender == "" or not message then return end
+    local myName = UnitName("player")
+    local baseSender = sender:match("^[^-]+") or sender
+    if baseSender == myName or sender == myName then return end
 
+    -- 1. Solicitud de escaneo P2P proveniente de un compañero de grupo/banda
+    if message == "WP_SCAN_REQ" then
+        -- Responder con jitter defensivo aleatorio para evitar colisiones en bandas de 25/40
+        responseJitterTimer = 0
+        responseJitterTarget = 0.05 + (math.random(1, 30) / 100)
+        responsePending = true
+        return
+    end
+
+    -- 2. Recepción de estado de un compañero
     -- Formato esperado: "WP_ADDONS:<addon1>,<addon2>|<MODE>"
     local addonList, mode = message:match("^WP_ADDONS:([^|]*)|(.+)$")
     if not addonList then return end
@@ -198,6 +243,25 @@ local function ParseAddonMessage(sender, message)
         mode   = mode or "NORMAL",
         time   = GetTime(),
     }
+end
+
+local function RequestGroupScan()
+    local targetChannel = GetGroupChannel()
+    if not targetChannel then
+        CPrint("No estás en un grupo o banda para escanear.")
+        return
+    end
+
+    if RegisterAddonMessagePrefix then
+        RegisterAddonMessagePrefix(C.Config.AddonPrefix)
+    end
+
+    -- Primero transmitimos nuestro estado
+    BroadcastStatus()
+
+    -- Solicitamos a todos los clientes del grupo responder con el suyo
+    SendAddonMessage(C.Config.AddonPrefix, "WP_SCAN_REQ", targetChannel)
+    CPrint("Escaneando addons del grupo (solicitud P2P enviada)...")
 end
 
 -- ================================================================
@@ -302,8 +366,7 @@ SlashCmdList["WPCOMP"] = function(msg)
     cmd = cmd or ""
 
     if cmd == "scan" then
-        BroadcastStatus()
-        CPrint("Escaneando addons del grupo...")
+        RequestGroupScan()
     elseif cmd == "status" or cmd == "" then
         PrintGroupStatus()
     elseif cmd == "debug" then
@@ -327,6 +390,55 @@ SlashCmdList["WPCOMP"] = function(msg)
     else
         CPrint("Uso: /companion [status|scan|channel|debug]")
     end
+end
+
+-- ================================================================
+-- BOTÓN DE MINIMAPA OFICIAL CON EL LOGO DE WOW PERÚ
+-- ================================================================
+local minimapBtn = nil
+local function CreateMinimapButton()
+    if minimapBtn then return minimapBtn end
+    local btn = CreateFrame("Button", "WoWPeru_CompanionMinimapBtn", Minimap)
+    btn:SetSize(31, 31)
+    btn:SetFrameStrata("MEDIUM")
+    btn:SetFrameLevel(8)
+    btn:SetPoint("TOPLEFT", Minimap, "TOPLEFT", 10, -10)
+    btn:RegisterForClicks("LeftButtonUp", "RightButtonUp")
+    btn:SetHighlightTexture("Interface\\Minimap\\UI-Minimap-ZoomButton-Highlight")
+
+    local icon = btn:CreateTexture(nil, "BACKGROUND")
+    icon:SetSize(20, 20)
+    icon:SetPoint("CENTER", btn, "CENTER", 0, 0)
+    icon:SetTexture("Interface\\AddOns\\WoWPeru_Companion\\Textures\\wowperu_icon.tga")
+
+    local border = btn:CreateTexture(nil, "OVERLAY")
+    border:SetSize(52, 52)
+    border:SetPoint("TOPLEFT", btn, "TOPLEFT", 0, 0)
+    border:SetTexture("Interface\\Minimap\\MiniMap-TrackingBorder")
+
+    btn:SetScript("OnEnter", function(self)
+        GameTooltip:SetOwner(self, "ANCHOR_LEFT")
+        GameTooltip:AddLine("|cFFD4AF37WoW Perú Companion|r", 1, 1, 1)
+        GameTooltip:AddLine("Hub del Ecosistema de Addons", 0.8, 0.8, 0.8)
+        GameTooltip:AddLine("|cFF888888Desarrollo: DarckRovert (Elnazzareno)|r", 0.7, 0.7, 0.7)
+        GameTooltip:AddLine(" ")
+        GameTooltip:AddLine("|cFFFFD100Click Izquierdo:|r Solicitar escaneo P2P", 0.2, 1, 0.2)
+        GameTooltip:AddLine("|cFFFFD100Click Derecho:|r Imprimir estado del grupo", 0.2, 0.8, 1)
+        GameTooltip:Show()
+    end)
+    btn:SetScript("OnLeave", function()
+        GameTooltip:Hide()
+    end)
+    btn:SetScript("OnClick", function(self, button)
+        if button == "RightButton" then
+            PrintGroupStatus()
+        else
+            RequestGroupScan()
+        end
+    end)
+
+    minimapBtn = btn
+    return btn
 end
 
 -- ================================================================
@@ -359,6 +471,16 @@ eventFrame:SetScript("OnUpdate", function(self, elapsed)
             BroadcastStatus()
         end
     end
+
+    -- Despacho con jitter para respuesta a solicitud WP_SCAN_REQ
+    if responsePending then
+        responseJitterTimer = responseJitterTimer + elapsed
+        if responseJitterTimer >= responseJitterTarget then
+            responsePending = false
+            responseJitterTimer = 0
+            BroadcastStatus()
+        end
+    end
 end)
 
 eventFrame:SetScript("OnEvent", function(self, event, ...)
@@ -374,6 +496,7 @@ eventFrame:SetScript("OnEvent", function(self, event, ...)
             if WoWPeruCompanion_DB.Debug ~= nil then
                 C.Config.Debug = WoWPeruCompanion_DB.Debug
             end
+            CreateMinimapButton()
             CPrint("v" .. C.Config.Version .. " cargado. Usa /companion")
         end
 
@@ -394,6 +517,18 @@ eventFrame:SetScript("OnEvent", function(self, event, ...)
         local prefix, message, channel, sender = ...
         if prefix == C.Config.AddonPrefix then
             ParseAddonMessage(sender, message)
+        end
+
+        -- Escuchar confirmación autoritativa de modo de juego para actualizar grupo de inmediato
+        if prefix == "WP_GAMEMODE" and message then
+            local mode = message:match("^STATUS:(.+)$") or message:match("^ACK:(.+)$")
+            if mode and mode ~= "NONE" then
+                if WoWPeru_GameModes_CharDB then
+                    WoWPeru_GameModes_CharDB.hasSelectedMode = true
+                    WoWPeru_GameModes_CharDB.selectedMode = mode
+                end
+                BroadcastStatus()
+            end
         end
 
         -- Escuchar paquetes de BattlePass para sincronizar inmediato tras XP real
