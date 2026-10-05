@@ -10,7 +10,7 @@ Ficha técnica oficial de registro en la infraestructura multi-addon de **WoW Pe
 |---|---|
 | **Nombre Técnico** | `WoWPeru_Companion` |
 | **Título en Cliente** | `|cFFD4AF37WoW Perú|r - Companion` |
-| **Versión** | `1.0.1` |
+| **Versión** | `1.0.2` |
 | **Tipo de Sistema** | Hub Social Meta-Ligero (Client-Side Only) |
 | **Repositorio GitHub** | [DarckRovert/WoWPeru_Companion](https://github.com/DarckRovert/WoWPeru_Companion) |
 | **Directorio de Instalación** | `Interface\AddOns\WoWPeru_Companion\` |

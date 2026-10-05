@@ -1,0 +1,10 @@
+# Git Attributes - Preservación estricta de binarios de cliente WoW
+*.blp binary
+*.tga binary
+*.png binary
+*.jpg binary
+*.mp3 binary
+*.ogg binary
+*.wav binary
+*.ttf binary
+*.mpq binary
