@@ -8,7 +8,7 @@ WoWPeru_Companion = WoWPeru_Companion or {}
 local C = WoWPeru_Companion
 
 C.Config = {
-    Version         = "1.0.2",
+    Version         = "1.0.3",
     AnnounceChannel = "GROUP",   -- GROUP | PARTY | SAY | OFF ("")
     Debug           = false,
 
@@ -21,6 +21,7 @@ C.Config = {
         { name = "WoWPeru_GameModes",   label = "GameModes",  color = "FF4FC3F7" },
         { name = "WoWPeru_RaidSuite",   label = "RaidSuite",  color = "FF81C784" },
         { name = "WowPeruVisualShop",   label = "VisualShop", color = "FFCE93D8" },
+        { name = "Talented",            label = "Talented",   color = "FFF57C00" },
     },
 
     -- Prefijo de red

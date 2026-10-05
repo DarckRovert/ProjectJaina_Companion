@@ -4,6 +4,17 @@ Todas las modificaciones notables de este proyecto están documentadas en este a
 
 ---
 
+## [1.0.3] - 2026-10-05
+
+### ⚔️ Utilidades Cross-Faction y Ecosistema
+- **Comercio e Invitación Interfacción (`Core.lua`):**
+  - Incorporados los comandos de barra `/comerciar` (o `/comercio`) y `/invitar <Nombre>` para permitir el comercio y la agrupación entre jugadores de la Alianza y la Horda.
+  - **Inmunidad Estricta al Taint:** Implementación limpia mediante ejecución directa de `InitiateTrade("target")` e `InviteUnit(name)` sin tocar la tabla compartida `UnitPopupMenus` de Blizzard, previniendo los errores de acción bloqueada al establecer focos o clicar en marcos de curación.
+- **Detección de Talented (`Config.lua`):**
+  - Añadido el módulo `Talented` al catálogo de auto-descubrimiento del ecosistema oficial.
+
+---
+
 ## [1.0.2] - 2026-10-04
 
 ### 🌐 Sincronización P2P y Mitigación de Colisiones (Fix #1)

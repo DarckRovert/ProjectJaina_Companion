@@ -1,8 +1,8 @@
 ## Interface: 30300
 ## Title: |cFFD4AF37WoW Perú|r - Companion
-## Notes: Hub social ligero del ecosistema WoW Perú. Muestra addons activos en el grupo, badge de modo de juego y anuncios de BattlePass.
+## Notes: Hub social ligero del ecosistema WoW Perú. Muestra addons activos en el grupo, badge de modo de juego, anuncios de BattlePass y utilidades de comercio e invitación cross-faction sin taint.
 ## Author: DarckRovert (Ingame: Elnazzareno) & WoW Perú Team
-## Version: 1.0.2
+## Version: 1.0.3
 ## SavedVariables: WoWPeruCompanion_DB
 
 Config.lua

@@ -394,7 +394,36 @@ SlashCmdList["WPCOMP"] = function(msg)
         end
     else
         CPrint("Uso: /companion [status|scan|channel|debug]")
+        CPrint("Comandos Cross-Faction: /comerciar y /invitar [Nombre]")
     end
+end
+
+-- ================================================================
+-- UTILIDADES CROSS-FACTION (Alianza <-> Horda)
+-- Permite comerciar e invitar entre facciones opuestas de forma limpia
+-- sin modificar UnitPopupMenus de Blizzard (CERO TAINT).
+-- ================================================================
+SLASH_WPCOMERCIAR1 = "/comerciar"
+SLASH_WPCOMERCIAR2 = "/comercio"
+SlashCmdList["WPCOMERCIAR"] = function()
+    if not UnitExists("target") then
+        CPrint("Selecciona a un jugador y escribe |cFFD4AF37/comerciar|r")
+        return
+    end
+    InitiateTrade("target")
+end
+
+SLASH_WPINVITAR1 = "/invitar"
+SlashCmdList["WPINVITAR"] = function(nombre)
+    if nombre and nombre ~= "" then
+        InviteUnit(nombre)
+        return
+    end
+    if UnitExists("target") and UnitIsPlayer("target") then
+        InviteUnit(UnitName("target"))
+        return
+    end
+    CPrint("Escribe |cFFD4AF37/invitar Nombre|r, o selecciona a un jugador primero.")
 end
 
 -- ================================================================

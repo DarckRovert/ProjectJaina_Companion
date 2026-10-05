@@ -1,6 +1,6 @@
-# 🇵🇪 WoW Perú — Companion (v1.0.2)
+# 🇵🇪 WoW Perú — Companion (v1.0.3)
 
-**Versión:** 1.0.2 (WotLK Hardened Edition)  
+**Versión:** 1.0.3 (WotLK Hardened Edition)  
 **Autor:** DarckRovert (Ingame: `Elnazzareno`) & WoW Perú Team  
 **Servidor Destino:** [WoW Perú](https://wow-peru.lat/) — Reino Andino  
 **Entorno de Ejecución:** World of Warcraft 3.3.5a (Build 12340) | Lua 5.1 puro  
@@ -10,7 +10,7 @@
 
 [![WoW Client](https://img.shields.io/badge/WoW%20Client-3.3.5a%20(Build%2012340)-blue.svg)](https://wow-peru.lat/)
 [![Servidor](https://img.shields.io/badge/Servidor-WoW%20Perú-gold.svg)](https://wow-peru.lat/)
-[![Version](https://img.shields.io/badge/version-1.0.2-brightgreen.svg)](https://github.com/DarckRovert/WoWPeru_Companion/releases)
+[![Version](https://img.shields.io/badge/version-1.0.3-brightgreen.svg)](https://github.com/DarckRovert/WoWPeru_Companion/releases)
 [![Build Status](https://img.shields.io/badge/CI-Passing-success.svg)](https://github.com/DarckRovert/WoWPeru_Companion/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
@@ -83,6 +83,8 @@ La comunicación entre clientes opera de manera transparente usando el canal int
 | `/companion scan` | `/wpcomp scan` | Fuerza un broadcast manual inmediato y solicita telemetría a los compañeros. |
 | `/companion channel <chan>` | `/wpcomp channel` | Configura el canal de felicitación de BattlePass (`group`, `party`, `say`, `off`). |
 | `/companion debug` | `/wpcomp debug` | Activa o desactiva la salida de depuración en tiempo real en la consola de chat. |
+| `/comerciar` | `/comercio` | Inicia comercio seguro con el objetivo seleccionado (incluso entre Alianza y Horda). |
+| `/invitar <Nombre>` | — | Invita a grupo a un jugador de cualquier facción sin contaminar la UI de Blizzard (CERO TAINT). |
 
 ---
 

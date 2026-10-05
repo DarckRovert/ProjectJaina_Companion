@@ -10,8 +10,8 @@ Ficha técnica oficial de registro en la infraestructura multi-addon de **WoW Pe
 |---|---|
 | **Nombre Técnico** | `WoWPeru_Companion` |
 | **Título en Cliente** | `|cFFD4AF37WoW Perú|r - Companion` |
-| **Versión** | `1.0.2` |
-| **Tipo de Sistema** | Hub Social Meta-Ligero (Client-Side Only) |
+| **Versión** | `1.0.3` |
+| **Tipo de Sistema** | Hub Social Meta-Ligero & Cross-Faction (Client-Side Only) |
 | **Repositorio GitHub** | [DarckRovert/WoWPeru_Companion](https://github.com/DarckRovert/WoWPeru_Companion) |
 | **Directorio de Instalación** | `Interface\AddOns\WoWPeru_Companion\` |
 
@@ -48,6 +48,8 @@ Ficha técnica oficial de registro en la infraestructura multi-addon de **WoW Pe
 | **`WowPeruVisualShop`** | Detección P2P | Detecta estado cargado y sincroniza presencia en el grupo. |
 | **`WoWPeru_LoreHUD`** | Detección P2P | Detecta HUD cinematográfico y eventos de interacción con LoreBots. |
 | **`WoWPeru_Carbonite`** | Detección P2P | Detecta suite satelital HD de cartografía y navegación. |
+| **`Talented`** | Detección P2P | Detección de presencia del simulador y gestor de talentos en el cliente. |
+| **`Cross-Faction Core`** | Comandos Slash Nativos | `/comerciar` e `/invitar` comunican con el Core de AzerothCore sin alterar FrameXML. |
 
 ---
 
