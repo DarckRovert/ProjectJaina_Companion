@@ -22,6 +22,7 @@ C.Config = {
         { name = "WoWPeru_RaidSuite",   label = "RaidSuite",  color = "FF81C784" },
         { name = "WowPeruVisualShop",   label = "VisualShop", color = "FFCE93D8" },
         { name = "Talented",            label = "Talented",   color = "FFF57C00" },
+        { name = "WoWPeru_Wardrobe",    label = "Wardrobe",   color = "FFE6C280" },
     },
 
     -- Prefijo de red
