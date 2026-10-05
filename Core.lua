@@ -296,6 +296,22 @@ local function CheckBattlePassLevelUp()
 end
 
 -- ================================================================
+-- FORMATO CANÓNICO DE MODOS DE JUEGO (NORMAL, HC, IM, RETO X1)
+-- ================================================================
+local function FormatModeBadge(mode, short)
+    if not mode or mode == "NORMAL" or mode == "NONE" then
+        return short and "" or " |cFF888888[NORMAL]|r"
+    elseif mode == "HARDCORE" then
+        return short and " |cFFFF3333[HC]|r" or " |cFFFF3333[HARDCORE]|r"
+    elseif mode == "IRONMAN" then
+        return short and " |cFFFF9900[IM]|r" or " |cFFFF9900[IRONMAN]|r"
+    elseif mode == "SLOW_X1" or mode == "X1" then
+        return short and " |cFFFFD100[X1]|r" or " |cFFFFD100[RETO X1]|r"
+    end
+    return short and string.format(" |cFF00CCFF[%s]|r", tostring(mode)) or string.format(" |cFF00CCFF[%s]|r", tostring(mode))
+end
+
+-- ================================================================
 -- SECCIÓN 4: INTERFAZ DE COMANDO /companion
 -- ================================================================
 local function PrintGroupStatus()
@@ -304,13 +320,8 @@ local function PrintGroupStatus()
     local targetChannel = GetGroupChannel()
     if not targetChannel then
         local myMode = GetLocalGameMode()
-        local modeStr = ""
-        if myMode == "HARDCORE" then modeStr = " |cFFFF3333[HARDCORE]|r"
-        elseif myMode == "IRONMAN" then modeStr = " |cFFFF9900[IRONMAN]|r"
-        else modeStr = " |cFF888888[NORMAL]|r"
-        end
         CPrint("No estas en un grupo o banda actualmente.")
-        CPrint("Tu modo activo:" .. modeStr)
+        CPrint("Tu modo activo:" .. FormatModeBadge(myMode, false))
         return
     end
 
@@ -319,10 +330,7 @@ local function PrintGroupStatus()
     -- Mostrar primero al jugador local
     local myName = UnitName("player") or "Jugador"
     local myMode = GetLocalGameMode()
-    local myModeStr = ""
-    if myMode == "HARDCORE" then myModeStr = " |cFFFF3333[HC]|r"
-    elseif myMode == "IRONMAN" then myModeStr = " |cFFFF9900[IM]|r"
-    end
+    local myModeStr = FormatModeBadge(myMode, true)
 
     local myActive = {}
     for _, entry in ipairs(C.Config.EcosystemAddons) do
@@ -345,10 +353,7 @@ local function PrintGroupStatus()
                 table.insert(addonNames, label)
             end
             table.sort(addonNames)
-            local modeStr = ""
-            if data.mode == "HARDCORE" then modeStr = " |cFFFF3333[HC]|r"
-            elseif data.mode == "IRONMAN" then modeStr = " |cFFFF9900[IM]|r"
-            end
+            local modeStr = FormatModeBadge(data.mode, true)
             local listStr = (#addonNames > 0) and table.concat(addonNames, ", ") or "(solo Companion)"
             CPrint(string.format("  %s%s: %s", name, modeStr, listStr))
         end

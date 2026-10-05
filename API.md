@@ -45,20 +45,20 @@ WP_ADDONS:<addon_label_1>,<addon_label_2>,...|<GAME_MODE>
 ```
 
 **Parámetros:**
-- `addon_label_n`: Etiquetas de addons detectados localmente (`BattlePass`, `Companion`, `GameModes`, `RaidSuite`, `VisualShop`).
-- `GAME_MODE`: Modalidad del jugador (`NORMAL`, `HARDCORE`, `IRONMAN`).
+- `addon_label_n`: Etiquetas de addons detectados localmente (`LoreHUD`, `BattlePass`, `Companion`, `GameModes`, `RaidSuite`, `VisualShop`).
+- `GAME_MODE`: Modalidad del jugador (`NORMAL`, `HARDCORE`, `IRONMAN`, `SLOW_X1`).
 
 **Ejemplos de Payload:**
 - Jugador con todo el ecosistema en Hardcore:
   ```
-  WP_ADDONS:BattlePass,Companion,GameModes,RaidSuite,VisualShop|HARDCORE
+  WP_ADDONS:BattlePass,Companion,GameModes,LoreHUD,RaidSuite,VisualShop|HARDCORE
   ```
-  *Longitud:* 69 bytes (Consumo de buffer: 27% del límite de 255 bytes).
-- Jugador únicamente con Companion en Normal:
+  *Longitud:* 77 bytes (Consumo de buffer: 30% del límite de 255 bytes).
+- Jugador únicamente con Companion en Reto x1:
   ```
-  WP_ADDONS:Companion|NORMAL
+  WP_ADDONS:Companion|SLOW_X1
   ```
-  *Longitud:* 26 bytes.
+  *Longitud:* 27 bytes.
 
 ---
 

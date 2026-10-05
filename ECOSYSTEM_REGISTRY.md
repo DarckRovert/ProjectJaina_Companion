@@ -46,6 +46,8 @@ Ficha técnica oficial de registro en la infraestructura multi-addon de **WoW Pe
 | **`WoWPeru_GameModes`** | Lectura de Estado / Auras | Lee `WoWPeru_GameModes_CharDB.selectedMode` con fallback a `UnitAura` ("hardcore", "ironman"). |
 | **`WoWPeru_RaidSuite`** | Detección P2P | Detecta estado cargado y sincroniza presencia en el grupo. |
 | **`WowPeruVisualShop`** | Detección P2P | Detecta estado cargado y sincroniza presencia en el grupo. |
+| **`WoWPeru_LoreHUD`** | Detección P2P | Detecta HUD cinematográfico y eventos de interacción con LoreBots. |
+| **`WoWPeru_Carbonite`** | Detección P2P | Detecta suite satelital HD de cartografía y navegación. |
 
 ---
 
