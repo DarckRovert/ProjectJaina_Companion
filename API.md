@@ -1,6 +1,6 @@
-# 💻 Especificación de API y Red — WoWPeru_Companion
+# 💻 Especificación de API y Red — Wanos_Companion
 
-Documento técnico de arquitectura de software y protocolo de red para desarrolladores y addons integrados en el ecosistema **WoW Perú**.
+Documento técnico de arquitectura de software y protocolo de red para desarrolladores y addons integrados en el ecosistema **Project Jaina**.
 
 ---
 
@@ -9,7 +9,7 @@ Documento técnico de arquitectura de software y protocolo de red para desarroll
 El addon expone un único namespace global en el entorno Lua del cliente:
 
 ```lua
-WoWPeru_Companion = {
+Wanos_Companion = {
     Config = {
         Version          = "1.0.1",
         AnnounceChannel  = "GROUP",   -- "GROUP" | "PARTY" | "SAY" | ""
@@ -64,9 +64,9 @@ WP_ADDONS:<addon_label_1>,<addon_label_2>,...|<GAME_MODE>
 
 ## 3. Escucha de Eventos de Otros Addons
 
-`WoWPeru_Companion` escucha pasivamente los prefijos de red de otros sistemas para enriquecer la experiencia social sin generar acoplamiento directo:
+`Wanos_Companion` escucha pasivamente los prefijos de red de otros sistemas para enriquecer la experiencia social sin generar acoplamiento directo:
 
-### Prefijo `WP_BP` (WoWPeru_BattlePass)
+### Prefijo `WP_BP` (Jaina_BattlePass)
 - Escucha paquetes entrantes `BP_RES_XP` y `BP_RES_SYNC`.
 - Acelera el ticker de sincronización interno (`tickElapsed = TICK_INTERVAL - 0.1`) para garantizar que la felicitación comunitaria se lance inmediatamente después de que el BattlePass termine de procesar la respuesta del servidor Eluna.
 
@@ -74,11 +74,11 @@ WP_ADDONS:<addon_label_1>,<addon_label_2>,...|<GAME_MODE>
 
 ## 4. Consulta Externa de Estado
 
-Otros addons pueden consultar si `WoWPeru_Companion` está activo o inspeccionar su configuración mediante comprobaciones estándar:
+Otros addons pueden consultar si `Wanos_Companion` está activo o inspeccionar su configuración mediante comprobaciones estándar:
 
 ```lua
-if _G.WoWPeru_Companion then
-    local comp = _G.WoWPeru_Companion
+if _G.Wanos_Companion then
+    local comp = _G.Wanos_Companion
     local version = comp.Config and comp.Config.Version
     -- Companion está activo en el cliente
 end
@@ -88,6 +88,6 @@ end
 
 ## 5. Persistencia (`SavedVariables`)
 
-- **Variable Global:** `WoWPeruCompanion_DB`
-- Se inicializa en el evento `ADDON_LOADED` al confirmarse la carga de `WoWPeru_Companion`.
+- **Variable Global:** `WanosCompanion_DB`
+- Se inicializa en el evento `ADDON_LOADED` al confirmarse la carga de `Wanos_Companion`.
 - Almacena personalizaciones del jugador (preferencias de canal de anuncio, toggle de depuración).

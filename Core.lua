@@ -1,9 +1,9 @@
 --[[
-    WoWPeru_Companion — Core.lua
-    Motor central del hub social de WoW Perú.
+    ProjectJaina_Companion — Core.lua
+    Motor central del hub social de Project Jaina.
 
     Funcionalidades:
-    1. Detecta qué addons WoW Perú tiene activo cada miembro del grupo vía P2P (WP_COMP).
+    1. Detecta qué addons Project Jaina tiene activo cada miembro del grupo vía P2P (WP_COMP).
     2. Anuncia en el canal de grupo cuando un jugador sube de nivel en el BattlePass.
     3. Muestra el badge de modo de juego (Hardcore/Ironman/Normal) del jugador local.
     4. Resiliencia contra reseteo de WTF en cabinas de internet mediante escaneo de auras.
@@ -43,8 +43,8 @@ if _Orig_ChatFrame_MessageEventHandler then
     end
 end
 
-WoWPeru_Companion = WoWPeru_Companion or {}
-local C = WoWPeru_Companion
+ProjectJaina_Companion = ProjectJaina_Companion or {}
+local C = ProjectJaina_Companion
 
 -- ================================================================
 -- ESTADO EN MEMORIA
@@ -65,7 +65,7 @@ local rosterDebounceActive   = false
 local function CPrint(msg)
     local f = DEFAULT_CHAT_FRAME or ChatFrame1
     if f and f.AddMessage then
-        f:AddMessage("|cFFD4AF37[WoW Peru]|r " .. tostring(msg))
+        f:AddMessage("|cFFD4AF37[Project Jaina]|r " .. tostring(msg))
     end
 end
 
@@ -76,10 +76,10 @@ local function IsAddonLoaded(name)
 end
 
 local function GetLocalGameMode()
-    if WoWPeru_GameModes_CharDB
-       and WoWPeru_GameModes_CharDB.hasSelectedMode
-       and WoWPeru_GameModes_CharDB.selectedMode then
-        return WoWPeru_GameModes_CharDB.selectedMode
+    if ProjectJaina_GameModes_CharDB
+       and ProjectJaina_GameModes_CharDB.hasSelectedMode
+       and ProjectJaina_GameModes_CharDB.selectedMode then
+        return ProjectJaina_GameModes_CharDB.selectedMode
     end
 
     -- Fallback resiliente a cabinas de internet (WTF reseteado): Escanear auras del servidor
@@ -88,15 +88,15 @@ local function GetLocalGameMode()
         if not auraName then break end
         local lower = auraName:lower()
         if lower:find("hardcore") then
-            if WoWPeru_GameModes_CharDB then
-                WoWPeru_GameModes_CharDB.hasSelectedMode = true
-                WoWPeru_GameModes_CharDB.selectedMode = "HARDCORE"
+            if ProjectJaina_GameModes_CharDB then
+                ProjectJaina_GameModes_CharDB.hasSelectedMode = true
+                ProjectJaina_GameModes_CharDB.selectedMode = "HARDCORE"
             end
             return "HARDCORE"
         elseif lower:find("ironman") then
-            if WoWPeru_GameModes_CharDB then
-                WoWPeru_GameModes_CharDB.hasSelectedMode = true
-                WoWPeru_GameModes_CharDB.selectedMode = "IRONMAN"
+            if ProjectJaina_GameModes_CharDB then
+                ProjectJaina_GameModes_CharDB.hasSelectedMode = true
+                ProjectJaina_GameModes_CharDB.selectedMode = "IRONMAN"
             end
             return "IRONMAN"
         end
@@ -268,8 +268,8 @@ end
 -- SECCIÓN 3: DETECCIÓN DE LEVEL-UP EN BATTLEPASS (LOGIN SEGURO)
 -- ================================================================
 local function CheckBattlePassLevelUp()
-    if not WoWPeru_BattlePass then return end
-    local bp = WoWPeru_BattlePass
+    if not Jaina_BattlePass then return end
+    local bp = Jaina_BattlePass
     if not bp.Data then return end
 
     -- Blindaje: Si el BattlePass aún no completa su sincronización inicial con el servidor, no evaluar
@@ -325,7 +325,7 @@ local function PrintGroupStatus()
         return
     end
 
-    CPrint("--- Estado del Ecosistema WoW Peru en el grupo ---")
+    CPrint("--- Estado del Ecosistema Project Jaina en el grupo ---")
 
     -- Mostrar primero al jugador local
     local myName = UnitName("player") or "Jugador"
@@ -364,28 +364,89 @@ local function PrintGroupStatus()
     end
 end
 
+-- ================================================================
+-- CENTRO DE CONTROL: MENÚ DESPLEGABLE NATIVO DEL ECOSISTEMA
+-- ================================================================
+local hubDropDown = CreateFrame("Frame", "ProjectJainaHubDropDown", UIParent, "UIDropDownMenuTemplate")
+
+local function ExecuteOrWarn(slashKey, fallbackKey, moduleName)
+    if SlashCmdList and SlashCmdList[slashKey] then
+        SlashCmdList[slashKey]("")
+    elseif fallbackKey and SlashCmdList and SlashCmdList[fallbackKey] then
+        SlashCmdList[fallbackKey]("")
+    elseif moduleName == "MultiBot" and MultiBot and MultiBot.ToggleMainUIVisibility then
+        MultiBot.ToggleMainUIVisibility()
+    else
+        CPrint(string.format("|cFFFF4444El modulo %s no esta activo o instalado.|r", moduleName))
+    end
+end
+
+local function OpenHubMenu(anchor)
+    local menuList = {
+        { text = "|cFFD4AF37Project Jaina|r - Centro de Control", isTitle = true, notCheckable = true },
+        { text = "|cFFFFD100Pase de Batalla|r (/bp)", notCheckable = true, func = function()
+            ExecuteOrWarn("WOWPERUBP", "BP", "BattlePass")
+        end },
+        { text = "|cFFFFD100Guardarropa (Transfiguración)|r (/armario)", notCheckable = true, func = function()
+            ExecuteOrWarn("WP_WARDROBEV2", "ARMARIO", "Guardarropa")
+        end },
+        { text = "|cFFFFD100Modos de Juego|r (/modos)", notCheckable = true, func = function()
+            ExecuteOrWarn("WOWPERU_MODES", "MODOS", "Modos de Juego")
+        end },
+        { text = "|cFFFFD100Suite Gráfica HD|r (/graficos)", notCheckable = true, func = function()
+            ExecuteOrWarn("WOWPERU_GRAPHICS", nil, "Graficos HD")
+        end },
+        { text = "|cFF00FFCCGestor de Bots con IA|r (/bots)", notCheckable = true, func = function()
+            ExecuteOrWarn("CHATTER", nil, "Chatter LLM")
+        end },
+        { text = "|cFFFFD100Playerbots (MultiBot)|r (/multibot)", notCheckable = true, func = function()
+            ExecuteOrWarn("MULTIBOT", "ACECONSOLE_MULTIBOT", "MultiBot")
+        end },
+        { text = "|cFFFFD100Tienda de Visuales|r (/tienda)", notCheckable = true, func = function()
+            ExecuteOrWarn("WOWPERU_VISUAL", nil, "Tienda Visual")
+        end },
+        { text = "|cFFFFD100LoreHUD (Subtítulos 3D)|r (/lorehud)", notCheckable = true, func = function()
+            ExecuteOrWarn("LOREHUD", nil, "LoreHUD")
+        end },
+        { text = " ", notCheckable = true, disabled = true },
+        { text = "Herramientas de Grupo", hasArrow = true, notCheckable = true,
+          menuList = {
+              { text = "Solicitar Escaneo P2P", notCheckable = true, func = RequestGroupScan },
+              { text = "Imprimir Estado de Companeros", notCheckable = true, func = PrintGroupStatus },
+          }
+        },
+        { text = " ", notCheckable = true, disabled = true },
+        { text = "|cFF888888Cerrar|r", notCheckable = true, func = function() end },
+    }
+    EasyMenu(menuList, hubDropDown, anchor or "cursor", 0, 0, "MENU")
+end
+
 SLASH_WPCOMP1 = "/companion"
 SLASH_WPCOMP2 = "/wpcomp"
+SLASH_WPCOMP3 = "/hub"
+SLASH_WPCOMP4 = "/menu"
 SlashCmdList["WPCOMP"] = function(msg)
     local cmd, arg = (msg or ""):lower():match("^(%S+)%s*(%S*)$")
     cmd = cmd or ""
 
-    if cmd == "scan" then
+    if cmd == "menu" or cmd == "hub" or cmd == "" then
+        OpenHubMenu("cursor")
+    elseif cmd == "scan" then
         RequestGroupScan()
-    elseif cmd == "status" or cmd == "" then
+    elseif cmd == "status" then
         PrintGroupStatus()
     elseif cmd == "debug" then
         C.Config.Debug = not C.Config.Debug
-        if WoWPeruCompanion_DB then WoWPeruCompanion_DB.Debug = C.Config.Debug end
+        if ProjectJainaCompanion_DB then ProjectJainaCompanion_DB.Debug = C.Config.Debug end
         CPrint("Debug: " .. (C.Config.Debug and "ON" or "OFF"))
     elseif cmd == "channel" then
         if arg == "group" or arg == "party" or arg == "say" then
             C.Config.AnnounceChannel = arg:upper()
-            if WoWPeruCompanion_DB then WoWPeruCompanion_DB.AnnounceChannel = C.Config.AnnounceChannel end
+            if ProjectJainaCompanion_DB then ProjectJainaCompanion_DB.AnnounceChannel = C.Config.AnnounceChannel end
             CPrint("Canal de anuncios configurado en: " .. C.Config.AnnounceChannel)
         elseif arg == "off" or arg == "none" then
             C.Config.AnnounceChannel = ""
-            if WoWPeruCompanion_DB then WoWPeruCompanion_DB.AnnounceChannel = "" end
+            if ProjectJainaCompanion_DB then ProjectJainaCompanion_DB.AnnounceChannel = "" end
             CPrint("Anuncios desactivados.")
         else
             local cur = (C.Config.AnnounceChannel ~= "") and C.Config.AnnounceChannel or "OFF"
@@ -443,7 +504,7 @@ end
 
 local function CreateMinimapButton()
     if minimapBtn then return minimapBtn end
-    local btn = CreateFrame("Button", "WoWPeru_CompanionMinimapBtn", Minimap)
+    local btn = CreateFrame("Button", "ProjectJaina_CompanionMinimapBtn", Minimap)
     btn:SetSize(31, 31)
     btn:SetFrameStrata("MEDIUM")
     btn:SetFrameLevel(8)
@@ -456,7 +517,7 @@ local function CreateMinimapButton()
     local icon = btn:CreateTexture(nil, "BACKGROUND")
     icon:SetSize(20, 20)
     icon:SetPoint("CENTER", btn, "CENTER", 0, 0)
-    icon:SetTexture("Interface\\AddOns\\WoWPeru_Companion\\Textures\\wowperu_icon.tga")
+    icon:SetTexture("Interface\\AddOns\\Jaina_Companion\\Textures\\jaina_icon.tga")
 
     local border = btn:CreateTexture(nil, "OVERLAY")
     border:SetSize(52, 52)
@@ -473,8 +534,9 @@ local function CreateMinimapButton()
         local angle = math.deg(math.atan2(py - my, px - mx))
         if angle < 0 then angle = angle + 360 end
 
-        WoWPeruCompanion_DB = WoWPeruCompanion_DB or {}
-        WoWPeruCompanion_DB.minimapAngle = angle
+        Wanos_Companion_DB = Wanos_Companion_DB or ProjectJainaCompanion_DB or {}
+            ProjectJainaCompanion_DB = Wanos_Companion_DB
+        ProjectJainaCompanion_DB.minimapAngle = angle
 
         UpdateMinimapBtnPosition(self, angle)
         wasDragged = true
@@ -493,12 +555,12 @@ local function CreateMinimapButton()
 
     btn:SetScript("OnEnter", function(self)
         GameTooltip:SetOwner(self, "ANCHOR_LEFT")
-        GameTooltip:AddLine("|cFFD4AF37WoW Perú Companion|r", 1, 1, 1)
-        GameTooltip:AddLine("Hub del Ecosistema de Addons", 0.8, 0.8, 0.8)
+        GameTooltip:AddLine("|cFFD4AF37Project Jaina Companion|r", 1, 1, 1)
+        GameTooltip:AddLine("Centro de Control del Ecosistema", 0.8, 0.8, 0.8)
         GameTooltip:AddLine("|cFF888888Desarrollo: DarckRovert (Elnazzareno)|r", 0.7, 0.7, 0.7)
         GameTooltip:AddLine(" ")
-        GameTooltip:AddLine("|cFFFFD100Click Izquierdo:|r Solicitar escaneo P2P", 0.2, 1, 0.2)
-        GameTooltip:AddLine("|cFFFFD100Click Derecho:|r Imprimir estado del grupo", 0.2, 0.8, 1)
+        GameTooltip:AddLine("|cFFFFD100Click Izquierdo:|r Abrir Menú Central de Project Jaina", 0.2, 1, 0.2)
+        GameTooltip:AddLine("|cFFFFD100Click Derecho:|r Imprimir estado de compañeros P2P", 0.2, 0.8, 1)
         GameTooltip:AddLine("|cFF888888Arrastrar para reposicionar|r", 0.7, 0.7, 0.7)
         GameTooltip:Show()
     end)
@@ -513,11 +575,11 @@ local function CreateMinimapButton()
         if button == "RightButton" then
             PrintGroupStatus()
         else
-            RequestGroupScan()
+            OpenHubMenu("cursor")
         end
     end)
 
-    local savedAngle = (WoWPeruCompanion_DB and WoWPeruCompanion_DB.minimapAngle) or DEFAULT_COMPANION_ANGLE
+    local savedAngle = (ProjectJainaCompanion_DB and ProjectJainaCompanion_DB.minimapAngle) or DEFAULT_COMPANION_ANGLE
     UpdateMinimapBtnPosition(btn, savedAngle)
 
     minimapBtn = btn
@@ -527,7 +589,7 @@ end
 -- ================================================================
 -- EVENTO FRAME PRINCIPAL (ZERO HEAP ALLOCATION)
 -- ================================================================
-local eventFrame = CreateFrame("Frame", "WoWPeruCompanion_Frame")
+local eventFrame = CreateFrame("Frame", "ProjectJainaCompanion_Frame")
 eventFrame:RegisterEvent("ADDON_LOADED")
 eventFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
 eventFrame:RegisterEvent("CHAT_MSG_ADDON")
@@ -569,15 +631,16 @@ end)
 eventFrame:SetScript("OnEvent", function(self, event, ...)
     if event == "ADDON_LOADED" then
         local name = ...
-        if name == "WoWPeru_Companion" then
+        if name == "Wanos_Companion" or name == "ProjectJaina_Companion" then
             addonLoaded = true
             -- Cargar DB persistente
-            WoWPeruCompanion_DB = WoWPeruCompanion_DB or {}
-            if WoWPeruCompanion_DB.AnnounceChannel ~= nil then
-                C.Config.AnnounceChannel = WoWPeruCompanion_DB.AnnounceChannel
+            Wanos_Companion_DB = Wanos_Companion_DB or ProjectJainaCompanion_DB or {}
+            ProjectJainaCompanion_DB = Wanos_Companion_DB
+            if ProjectJainaCompanion_DB.AnnounceChannel ~= nil then
+                C.Config.AnnounceChannel = ProjectJainaCompanion_DB.AnnounceChannel
             end
-            if WoWPeruCompanion_DB.Debug ~= nil then
-                C.Config.Debug = WoWPeruCompanion_DB.Debug
+            if ProjectJainaCompanion_DB.Debug ~= nil then
+                C.Config.Debug = ProjectJainaCompanion_DB.Debug
             end
             CreateMinimapButton()
             CPrint("v" .. C.Config.Version .. " cargado. Usa /companion")
@@ -588,8 +651,8 @@ eventFrame:SetScript("OnEvent", function(self, event, ...)
             RegisterAddonMessagePrefix(C.Config.AddonPrefix)
         end
         -- Inicializar nivel base de BattlePass si ya completó sync
-        if WoWPeru_BattlePass and WoWPeru_BattlePass.Data and WoWPeru_BattlePass.Data.hasSyncedOnce then
-            lastBPLevel = WoWPeru_BattlePass.Data.level or 0
+        if Jaina_BattlePass and Jaina_BattlePass.Data and Jaina_BattlePass.Data.hasSyncedOnce then
+            lastBPLevel = Jaina_BattlePass.Data.level or 0
         else
             lastBPLevel = 0
         end
@@ -605,10 +668,15 @@ eventFrame:SetScript("OnEvent", function(self, event, ...)
         -- Escuchar confirmación autoritativa de modo de juego para actualizar grupo de inmediato
         if prefix == "WP_GAMEMODE" and message then
             local mode = message:match("^STATUS:(.+)$") or message:match("^ACK:(.+)$")
-            if mode and mode ~= "NONE" then
-                if WoWPeru_GameModes_CharDB then
-                    WoWPeru_GameModes_CharDB.hasSelectedMode = true
-                    WoWPeru_GameModes_CharDB.selectedMode = mode
+            if mode then
+                if ProjectJaina_GameModes_CharDB then
+                    if mode == "NONE" then
+                        ProjectJaina_GameModes_CharDB.hasSelectedMode = false
+                        ProjectJaina_GameModes_CharDB.selectedMode = nil
+                    else
+                        ProjectJaina_GameModes_CharDB.hasSelectedMode = true
+                        ProjectJaina_GameModes_CharDB.selectedMode = mode
+                    end
                 end
                 BroadcastStatus()
             end

@@ -1,13 +1,13 @@
-# 📦 Guía de Instalación — WoWPeru_Companion
+# 📦 Guía de Instalación — Wanos_Companion
 
-Instrucciones oficiales para instalar y verificar **WoWPeru_Companion** en el cliente **World of Warcraft 3.3.5a (Build 12340)** del servidor **WoW Perú - Reino Andino**.
+Instrucciones oficiales para instalar y verificar **Wanos_Companion** en el cliente **World of Warcraft 3.3.5a (Build 12340)** del servidor **Project Jaina - Project Jaina**.
 
 ---
 
 ## 📥 Requisitos Previos
 
 1. **Cliente WoW 3.3.5a (Build 12340):** Asegúrate de contar con una instalación limpia o estándar de Wrath of the Lich King.
-2. **Acceso al Directorio del Juego:** Ubicación habitual en `d:\WoW Peru\Client\` o donde tengas alojado tu ejecutable `Wow.exe`.
+2. **Acceso al Directorio del Juego:** Ubicación habitual en `d:\Project Jaina\Client\` o donde tengas alojado tu ejecutable `Wow.exe`.
 
 ---
 
@@ -18,28 +18,28 @@ Instrucciones oficiales para instalar y verificar **WoWPeru_Companion** en el cl
 Abre tu terminal en la carpeta de AddOns:
 
 ```bash
-cd "d:\WoW Peru\Client\Interface\AddOns\"
-git clone https://github.com/DarckRovert/WoWPeru_Companion.git
+cd "d:\Project Jaina\Client\Interface\AddOns\"
+git clone https://github.com/DarckRovert/Wanos_Companion.git
 ```
 
-Asegúrate de que la carpeta resultante se llame exactamente `WoWPeru_Companion`.
+Asegúrate de que la carpeta resultante se llame exactamente `Wanos_Companion`.
 
 ### Método 2: Descarga Manual (.ZIP)
 
-1. Descarga la última versión desde [Releases en GitHub](https://github.com/DarckRovert/WoWPeru_Companion/releases).
+1. Descarga la última versión desde [Releases en GitHub](https://github.com/DarckRovert/Wanos_Companion/releases).
 2. Extrae el contenido en la ruta:
    ```
    World of Warcraft/Interface/AddOns/
    ```
 3. Verifica que la ruta final de los archivos sea:
    ```
-   Interface/AddOns/WoWPeru_Companion/WoWPeru_Companion.toc
-   Interface/AddOns/WoWPeru_Companion/Config.lua
-   Interface/AddOns/WoWPeru_Companion/Core.lua
+   Interface/AddOns/Wanos_Companion/Wanos_Companion.toc
+   Interface/AddOns/Wanos_Companion/Config.lua
+   Interface/AddOns/Wanos_Companion/Core.lua
    ```
 
 > [!WARNING]
-> **Estructura de Directorios:** Si los archivos quedan anidados en `Interface\AddOns\WoWPeru_Companion\WoWPeru_Companion\`, el cliente de WoW 3.3.5a no reconocerá el addon en la pantalla de selección de personajes.
+> **Estructura de Directorios:** Si los archivos quedan anidados en `Interface\AddOns\Jaina_Companion\Wanos_Companion\`, el cliente de WoW 3.3.5a no reconocerá el addon en la pantalla de selección de personajes.
 
 ---
 
@@ -48,7 +48,7 @@ Asegúrate de que la carpeta resultante se llame exactamente `WoWPeru_Companion`
 1. Inicia `Wow.exe` e ingresa a tu cuenta.
 2. En la pantalla de selección de personajes, haz clic en el botón **Accesorios** (o **AddOns**) ubicado en la esquina inferior izquierda.
 3. Asegúrate de marcar la casilla **"Cargar accesorios desactualizados"** (Load out of date AddOns).
-4. Verifica que `WoW Perú - Companion` aparezca en la lista con su casilla marcada.
+4. Verifica que `Project Jaina - Companion` aparezca en la lista con su casilla marcada.
 5. Entra al juego con cualquier personaje.
 
 ---
@@ -59,13 +59,13 @@ Una vez dentro del mundo:
 
 1. Deberías ver un mensaje en el chat general:
    ```
-   [WoW Peru] v1.0.1 cargado. Usa /companion
+   [Project Jaina] v1.0.1 cargado. Usa /companion
    ```
 2. Ejecuta en el chat:
    ```
    /companion
    ```
-3. Si estás en grupo con otros jugadores que tengan addons del ecosistema WoW Perú, ejecuta:
+3. Si estás en grupo con otros jugadores que tengan addons del ecosistema Project Jaina, ejecuta:
    ```
    /companion scan
    ```
@@ -77,8 +77,8 @@ Una vez dentro del mundo:
 
 ### 1. El comando `/companion` no responde
 - Verifica que el addon esté habilitado en el menú de AddOns de la pantalla de personajes.
-- Comprueba que la carpeta se llame exactamente `WoWPeru_Companion` (sin sufijos como `-main` o `-master`).
+- Comprueba que la carpeta se llame exactamente `Wanos_Companion` (sin sufijos como `-main` o `-master`).
 
 ### 2. No se ven los addons de mis compañeros
-- Los compañeros deben tener al menos un addon del ecosistema WoW Perú y estar en el mismo grupo o banda (`PARTY` o `RAID`).
+- Los compañeros deben tener al menos un addon del ecosistema Project Jaina y estar en el mismo grupo o banda (`PARTY` o `RAID`).
 - Ejecuta `/companion scan` para solicitar una actualización forzada.

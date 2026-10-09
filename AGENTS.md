@@ -1,9 +1,9 @@
-# 🤖 Reglas de Contexto y Memoria para Agentes de IA — WoWPeru_Companion
+# 🤖 Reglas de Contexto y Memoria para Agentes de IA — Wanos_Companion
 
 > **Documento Maestro de Arquitectura y Memoria Operativa**  
-> **Ámbito:** `d:\WoW Peru\Client\Interface\AddOns\WoWPeru_Companion\`  
+> **Ámbito:** `d:\Project Jaina\Client\Interface\AddOns\Jaina_Companion\`  
 > **Líder del Proyecto:** DarckRovert (Ingame: `Elnazzareno`)  
-> **Servidor Destino:** [WoW Perú](https://wow-peru.lat/) — Reino Andino  
+> **Servidor Destino:** [Project Jaina](https://worldofwanos.com/) — Project Jaina  
 > **Entorno de Ejecución:** World of Warcraft 3.3.5a (Build 12340) | Lua 5.1 puro  
 > **Versión de Reglas:** 1.0.1 (Septiembre 2026)
 
@@ -11,14 +11,14 @@
 
 ## 1. Mapeo del Ecosistema de Addons
 
-Este addon convive con los **5 sistemas oficiales** de WoW Perú:
+Este addon convive con los **5 sistemas oficiales** de Project Jaina:
 
 | Addon / Sistema | Prefijo de Red | Función |
 | :--- | :--- | :--- |
-| **`WoWPeru_Companion`** | `WP_COMP` | Hub social meta-ligero. Telemetría de grupo, badges de modo y anuncios de BattlePass. |
-| **`WoWPeru_BattlePass`** | `WP_BP` | Pase de Batalla Estacional (50 niveles). |
-| **`WoWPeru_GameModes`** | `WP_GAMEMODE` | Selector de modos de juego (Normal, Hardcore, Ironman). |
-| **`WoWPeru_RaidSuite`** | `WP_BP` (EcoBridge) / `Sequito` | Suite táctica de combate, loot y raids. |
+| **`Wanos_Companion`** | `WP_COMP` | Hub social meta-ligero. Telemetría de grupo, badges de modo y anuncios de BattlePass. |
+| **`Jaina_BattlePass`** | `WP_BP` | Pase de Batalla Estacional (50 niveles). |
+| **`Wanos_GameModes`** | `WP_GAMEMODE` | Selector de modos de juego (Normal, Hardcore, Ironman). |
+| **`Wanos_RaidSuite`** | `WP_BP` (EcoBridge) / `Sequito` | Suite táctica de combate, loot y raids. |
 | **`WowPeruVisualShop`** | `WP_VISUAL` | Catálogo visual de alas, auras y títulos sincronizado. |
 
 ---

@@ -1,4 +1,4 @@
-# 📋 Registro de Cambios (Changelog) — WoWPeru_Companion
+# 📋 Registro de Cambios (Changelog) — Wanos_Companion
 
 Todas las modificaciones notables de este proyecto están documentadas en este archivo siguiendo [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/) y respetando [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
@@ -21,7 +21,7 @@ Todas las modificaciones notables de este proyecto están documentadas en este a
 - **Handshake P2P Bidireccional (`Core.lua`):**
   - Implementado protocolo de descubrimiento bidireccional mediante `WP_SCAN_REQ` y respuesta `WP_SCAN_RES`.
   - Agregado jitter aleatorio anti-colisión en la respuesta para evitar ráfagas simultáneas de paquetes de chat de addon cuando varios clientes ingresan al grupo/banda al mismo tiempo.
-  - Sincronización reactiva inmediata con `WoWPeru_GameModes` eliminando condiciones de carrera en cabinas de internet.
+  - Sincronización reactiva inmediata con `Wanos_GameModes` eliminando condiciones de carrera en cabinas de internet.
 
 ---
 
@@ -44,9 +44,9 @@ Todas las modificaciones notables de este proyecto están documentadas en este a
 ## [1.0.0] - 2026-09-28
 
 ### 🎉 Lanzamiento Inicial
-- **Hub Social Meta-Ligero:** Addon cliente de telemetría de ~5 KB para el ecosistema WoW Perú.
+- **Hub Social Meta-Ligero:** Addon cliente de telemetría de ~5 KB para el ecosistema Project Jaina.
 - **Auto-Discovery P2P:** Detección automática de addons activos entre miembros del grupo mediante mensajes de addon `CHAT_MSG_ADDON` con prefijo `WP_COMP`.
-- **Badge de Modo de Juego:** Detección de modalidades Hardcore, Ironman y Normal con lectura de `WoWPeru_GameModes_CharDB`.
+- **Badge de Modo de Juego:** Detección de modalidades Hardcore, Ironman y Normal con lectura de `Wanos_GameModes_CharDB`.
 - **Anunciador de BattlePass:** Detección comunitaria de subida de nivel de Pase de Batalla estacional vía hooks al prefijo `WP_BP` (`BP_RES_XP`, `BP_RES_SYNC`).
 - **Comandos Slash:** Implementación de `/companion`, `/wpcomp`, `/companion scan` y `/companion debug`.
 - **Ticker Liviano:** Ticker de 5 segundos con acumulador `elapsed` para no generar impacto en la tasa de cuadros (60 FPS en hardware legacy).

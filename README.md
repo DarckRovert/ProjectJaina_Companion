@@ -1,26 +1,26 @@
-# 🇵🇪 WoW Perú — Companion (v1.0.3)
+# 🇵🇪 Project Jaina — Companion (v1.0.3)
 
 **Versión:** 1.0.3 (WotLK Hardened Edition)  
-**Autor:** DarckRovert (Ingame: `Elnazzareno`) & WoW Perú Team  
-**Servidor Destino:** [WoW Perú](https://wow-peru.lat/) — Reino Andino  
+**Autor:** DarckRovert (Ingame: `Elnazzareno`) & Project Jaina Team  
+**Servidor Destino:** [Project Jaina](https://worldofwanos.com/) — Project Jaina  
 **Entorno de Ejecución:** World of Warcraft 3.3.5a (Build 12340) | Lua 5.1 puro  
-**Repositorio Oficial:** [DarckRovert/WoWPeru_Companion](https://github.com/DarckRovert/WoWPeru_Companion)
+**Repositorio Oficial:** [DarckRovert/Wanos_Companion](https://github.com/DarckRovert/Wanos_Companion)
 
 ---
 
-[![WoW Client](https://img.shields.io/badge/WoW%20Client-3.3.5a%20(Build%2012340)-blue.svg)](https://wow-peru.lat/)
-[![Servidor](https://img.shields.io/badge/Servidor-WoW%20Perú-gold.svg)](https://wow-peru.lat/)
-[![Version](https://img.shields.io/badge/version-1.0.3-brightgreen.svg)](https://github.com/DarckRovert/WoWPeru_Companion/releases)
-[![Build Status](https://img.shields.io/badge/CI-Passing-success.svg)](https://github.com/DarckRovert/WoWPeru_Companion/actions)
+[![WoW Client](https://img.shields.io/badge/WoW%20Client-3.3.5a%20(Build%2012340)-blue.svg)](https://worldofwanos.com/)
+[![Servidor](https://img.shields.io/badge/Servidor-WoW%20Perú-gold.svg)](https://worldofwanos.com/)
+[![Version](https://img.shields.io/badge/version-1.0.3-brightgreen.svg)](https://github.com/DarckRovert/Wanos_Companion/releases)
+[![Build Status](https://img.shields.io/badge/CI-Passing-success.svg)](https://github.com/DarckRovert/Wanos_Companion/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 ---
 
-## 🌟 ¿Qué es WoWPeru_Companion?
+## 🌟 ¿Qué es Wanos_Companion?
 
-**WoWPeru_Companion** es el **hub social meta-ligero** (~5 KB en disco, < 100 KB de memoria RAM) del ecosistema oficial de addons de **WoW Perú**. Funciona como el puente de telemetría y reconocimiento mutuo entre los jugadores del Reino Andino dentro de grupos de mazmorra y bandas de raid.
+**Wanos_Companion** es el **hub social meta-ligero** (~5 KB en disco, < 100 KB de memoria RAM) del ecosistema oficial de addons de **Project Jaina**. Funciona como el puente de telemetría y reconocimiento mutuo entre los jugadores del Project Jaina dentro de grupos de mazmorra y bandas de raid.
 
-A diferencia de los sistemas pesados, `WoWPeru_Companion` opera 100% en el lado del cliente sin sobrecargar el servidor Eluna, permitiendo que los miembros de un grupo descubran al instante qué herramientas del servidor tienen instaladas sus compañeros, en qué modo de juego compiten (Normal, Hardcore o Ironman) y celebrando automáticamente en el chat de grupo cada vez que un miembro sube de nivel en el Pase de Batalla estacional.
+A diferencia de los sistemas pesados, `Wanos_Companion` opera 100% en el lado del cliente sin sobrecargar el servidor Eluna, permitiendo que los miembros de un grupo descubran al instante qué herramientas del servidor tienen instaladas sus compañeros, en qué modo de juego compiten (Normal, Hardcore o Ironman) y celebrando automáticamente en el chat de grupo cada vez que un miembro sube de nivel en el Pase de Batalla estacional.
 
 ```
 ┌────────────────────────────────────────────────────────────────────────┐
@@ -40,14 +40,14 @@ A diferencia de los sistemas pesados, `WoWPeru_Companion` opera 100% en el lado 
 ### 1. 🔍 Auto-Discovery de Addons en Grupo y Banda
 - Al unirse a un grupo (`PARTY_MEMBERS_CHANGED` / `RAID_ROSTER_UPDATE`), emite un broadcast asíncrono con retardo anti-concurrencia de 2 segundos.
 - Detecta en tiempo real la presencia de:
-  - 🏆 **`WoWPeru_BattlePass`**: Pase de Batalla Estacional.
-  - ⚔️ **`WoWPeru_GameModes`**: Selector y validador de Hardcore/Ironman.
-  - 🛡️ **`WoWPeru_RaidSuite`**: Plataforma táctica de combate y loot.
+  - 🏆 **`Jaina_BattlePass`**: Pase de Batalla Estacional.
+  - ⚔️ **`Wanos_GameModes`**: Selector y validador de Hardcore/Ironman.
+  - 🛡️ **`Wanos_RaidSuite`**: Plataforma táctica de combate y loot.
   - 👗 **`WowPeruVisualShop`**: Catálogo cosmético de alas, auras y títulos.
-  - 🤝 **`WoWPeru_Companion`**: Hub de telemetría social.
+  - 🤝 **`Wanos_Companion`**: Hub de telemetría social.
 
 ### 2. 🛡️ Detección Resiliente de Modos de Juego (Cabina-Ready)
-- Consulta la base local de `WoWPeru_GameModes_CharDB`.
+- Consulta la base local de `Wanos_GameModes_CharDB`.
 - **Mecanismo Fallback de Supervivencia:** Si la máquina de la cabina de internet reinicia la carpeta `WTF/` (congeladores como Deep Freeze), el addon escanea las auras activas del jugador (`UnitAura`) para identificar buffs de `"hardcore"` o `"ironman"`, garantizando que el badge nunca desaparezca ni muestre datos erróneos.
 
 ### 3. 📢 Anunciador de Hitos de Pase de Batalla
@@ -91,7 +91,7 @@ La comunicación entre clientes opera de manera transparente usando el canal int
 ## 📂 Estructura del Repositorio
 
 ```
-WoWPeru_Companion/
+Wanos_Companion/
 ├── .github/
 │   └── workflows/
 │       └── ci.yml               # Pipeline de integración continua GitHub Actions
@@ -103,12 +103,12 @@ WoWPeru_Companion/
 ├── CHANGELOG.md                 # Historial detallado de cambios y versiones
 ├── Config.lua                   # Configuración del ecosistema, canales y colores
 ├── Core.lua                     # Motor de red, eventos, comandos y ticker
-├── ECOSYSTEM_REGISTRY.md        # Ficha técnica oficial del ecosistema WoW Perú
+├── ECOSYSTEM_REGISTRY.md        # Ficha técnica oficial del ecosistema Project Jaina
 ├── INSTALL.md                   # Guía de instalación y solución de problemas
 ├── LICENSE                      # Licencia MIT
 ├── README.md                    # Documento maestro informativo
 ├── SECURITY.md                  # Políticas de seguridad e integridad de red
-└── WoWPeru_Companion.toc        # Metadatos del cliente WoW 3.3.5a
+└── Wanos_Companion.toc        # Metadatos del cliente WoW 3.3.5a
 ```
 
 ---
@@ -117,11 +117,11 @@ WoWPeru_Companion/
 
 - **Cliente WoW:** 3.3.5a (Build 12340).
 - **Motor Lua:** Lua 5.1 puro (sin sintaxis ni APIs de Cataclysm/MoP/Retail).
-- **Servidor:** AzerothCore / TrinityCore con soporte para WoW Perú - Reino Andino.
+- **Servidor:** AzerothCore / TrinityCore con soporte para Project Jaina - Project Jaina.
 - **Addons Opcionales (Sinérgicos):**
-  - [WoWPeru_BattlePass](https://github.com/DarckRovert/WoWPeru_BattlePass)
-  - [WoWPeru_GameModes](https://github.com/DarckRovert/WoWPeru_GameModes)
-  - [WoWPeru_RaidSuite](https://github.com/DarckRovert/WoWPeru_RaidSuite)
+  - [Jaina_BattlePass](https://github.com/DarckRovert/Jaina_BattlePass)
+  - [Wanos_GameModes](https://github.com/DarckRovert/Wanos_GameModes)
+  - [Wanos_RaidSuite](https://github.com/DarckRovert/Wanos_RaidSuite)
   - [WowPeruVisualShop](https://github.com/DarckRovert/WowPeruVisualShop)
 
 ---
@@ -130,4 +130,4 @@ WoWPeru_Companion/
 
 Distribuido bajo la Licencia **MIT**. Consulta [`LICENSE`](LICENSE) para más información.
 
-**Desarrollado con dedicación para la comunidad de [WoW Perú](https://wow-peru.lat/) — Reino Andino.**
+**Desarrollado con dedicación para la comunidad de [Project Jaina](https://worldofwanos.com/) — Project Jaina.**

@@ -1,14 +1,14 @@
-# 📜 Aviso Legal y Atribución — WoWPeru_Companion
+# 📜 Aviso Legal y Atribución — Wanos_Companion
 
-Este repositorio forma parte del ecosistema oficial de **WoW Perú - Reino Andino**.
+Este repositorio forma parte del ecosistema oficial de **Project Jaina - Project Jaina**.
 Contiene el hub social meta-ligero, sincronización de modos de juego y comandos cross-faction para World of Warcraft 3.3.5a (Build 12340).
 
 ---
 
 ## 1. Autoría y Desarrollo Oficial
-* **Desarrollador Principal:** DarckRovert (Ingame: `Elnazzareno`) & WoW Perú Team
-* **Ecosistema:** [WoW Perú — Reino Andino](https://wow-peru.lat/)
-* **Repositorio Oficial:** [DarckRovert/WoWPeru_Companion](https://github.com/DarckRovert/WoWPeru_Companion)
+* **Desarrollador Principal:** DarckRovert (Ingame: `Elnazzareno`) & Project Jaina Team
+* **Ecosistema:** [Project Jaina — Project Jaina](https://worldofwanos.com/)
+* **Repositorio Oficial:** [DarckRovert/Wanos_Companion](https://github.com/DarckRovert/Wanos_Companion)
 
 ---
 

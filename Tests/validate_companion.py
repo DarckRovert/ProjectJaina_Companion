@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-Test & Validation Suite for WoWPeru_Companion (World of Warcraft 3.3.5a)
+Test & Validation Suite for ProjectJaina_Companion (World of Warcraft 3.3.5a)
 Validates:
-1. Physical existence of all files listed in WoWPeru_Companion.toc
+1. Physical existence of all files listed in ProjectJaina_Companion.toc
 2. Syntactic integrity of all Lua 5.1 files (block openers/closers balance)
 3. Absence of incompatible Retail/MoP APIs without polyfills
 """
@@ -12,10 +12,10 @@ import os, sys, re
 REPO_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 
 def test_toc_integrity():
-    toc_path = os.path.join(REPO_DIR, "WoWPeru_Companion.toc")
-    print("[1/3] Testing WoWPeru_Companion.toc file references...")
+    toc_path = os.path.join(REPO_DIR, "ProjectJaina_Companion.toc")
+    print("[1/3] Testing ProjectJaina_Companion.toc file references...")
     if not os.path.exists(toc_path):
-        print("ERROR: WoWPeru_Companion.toc not found!")
+        print("ERROR: ProjectJaina_Companion.toc not found!")
         return False
 
     with open(toc_path, "r", encoding="utf-8", errors="ignore") as f:
