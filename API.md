@@ -66,7 +66,7 @@ WP_ADDONS:<addon_label_1>,<addon_label_2>,...|<GAME_MODE>
 
 `ProjectJaina_Companion` escucha pasivamente los prefijos de red de otros sistemas para enriquecer la experiencia social sin generar acoplamiento directo:
 
-### Prefijo `WP_BP` (Jaina_BattlePass)
+### Prefijo `WP_BP` (ProjectJaina_BattlePass)
 - Escucha paquetes entrantes `BP_RES_XP` y `BP_RES_SYNC`.
 - Acelera el ticker de sincronización interno (`tickElapsed = TICK_INTERVAL - 0.1`) para garantizar que la felicitación comunitaria se lance inmediatamente después de que el BattlePass termine de procesar la respuesta del servidor Eluna.
 

@@ -40,7 +40,7 @@ A diferencia de los sistemas pesados, `ProjectJaina_Companion` opera 100% en el 
 ### 1. 🔍 Auto-Discovery de Addons en Grupo y Banda
 - Al unirse a un grupo (`PARTY_MEMBERS_CHANGED` / `RAID_ROSTER_UPDATE`), emite un broadcast asíncrono con retardo anti-concurrencia de 2 segundos.
 - Detecta en tiempo real la presencia de:
-  - 🏆 **`Jaina_BattlePass`**: Pase de Batalla Estacional.
+  - 🏆 **`ProjectJaina_BattlePass`**: Pase de Batalla Estacional.
   - ⚔️ **`ProjectJaina_GameModes`**: Selector y validador de Hardcore/Ironman.
   - 🛡️ **`ProjectJaina_RaidSuite`**: Plataforma táctica de combate y loot.
   - 👗 **`ProjectJaina_VisualShop`**: Catálogo cosmético de alas, auras y títulos.
@@ -119,7 +119,7 @@ ProjectJaina_Companion/
 - **Motor Lua:** Lua 5.1 puro (sin sintaxis ni APIs de Cataclysm/MoP/Retail).
 - **Servidor:** AzerothCore / TrinityCore con soporte para Project Jaina - Project Jaina.
 - **Addons Opcionales (Sinérgicos):**
-  - [Jaina_BattlePass](https://github.com/DarckRovert/Jaina_BattlePass)
+  - [ProjectJaina_BattlePass](https://github.com/DarckRovert/ProjectJaina_BattlePass)
   - [ProjectJaina_GameModes](https://github.com/DarckRovert/ProjectJaina_GameModes)
   - [ProjectJaina_RaidSuite](https://github.com/DarckRovert/ProjectJaina_RaidSuite)
   - [ProjectJaina_VisualShop](https://github.com/DarckRovert/ProjectJaina_VisualShop)

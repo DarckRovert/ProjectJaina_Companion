@@ -16,7 +16,7 @@ Este addon convive con los **5 sistemas oficiales** de Project Jaina:
 | Addon / Sistema | Prefijo de Red | Función |
 | :--- | :--- | :--- |
 | **`ProjectJaina_Companion`** | `WP_COMP` | Hub social meta-ligero. Telemetría de grupo, badges de modo y anuncios de BattlePass. |
-| **`Jaina_BattlePass`** | `WP_BP` | Pase de Batalla Estacional (50 niveles). |
+| **`ProjectJaina_BattlePass`** | `WP_BP` | Pase de Batalla Estacional (50 niveles). |
 | **`ProjectJaina_GameModes`** | `WP_GAMEMODE` | Selector de modos de juego (Normal, Hardcore, Ironman). |
 | **`ProjectJaina_RaidSuite`** | `WP_BP` (EcoBridge) / `Jaina` | Suite táctica de combate, loot y raids. |
 | **`ProjectJaina_VisualShop`** | `WP_VISUAL` | Catálogo visual de alas, auras y títulos sincronizado. |
