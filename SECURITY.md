@@ -37,7 +37,7 @@ Si descubres una vulnerabilidad, fallo de seguridad o riesgo de exploit en este 
 1. **NO** abras un issue público en GitHub.
 2. Envía un reporte privado al equipo de desarrollo:
    - **Líder de Proyecto:** DarckRovert (`darckrovert@gmail.com`)
-   - **Discord Oficial:** Servidor de [Project Jaina](https://worldofwanos.com/)
+   - **Discord Oficial:** Servidor de [Project Jaina](https://projectjaina.com/)
 3. Incluye:
    - Pasos detallados para reproducir el fallo.
    - Versión exacta del cliente (`3.3.5a Build 12340`).

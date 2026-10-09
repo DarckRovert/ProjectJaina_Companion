@@ -2,14 +2,14 @@
 
 **Versión:** 1.0.3 (WotLK Hardened Edition)  
 **Autor:** DarckRovert (Ingame: `Elnazzareno`) & Project Jaina Team  
-**Servidor Destino:** [Project Jaina](https://worldofwanos.com/) — Project Jaina  
+**Servidor Destino:** [Project Jaina](https://projectjaina.com/) — Project Jaina  
 **Entorno de Ejecución:** World of Warcraft 3.3.5a (Build 12340) | Lua 5.1 puro  
 **Repositorio Oficial:** [DarckRovert/Wanos_Companion](https://github.com/DarckRovert/Wanos_Companion)
 
 ---
 
-[![WoW Client](https://img.shields.io/badge/WoW%20Client-3.3.5a%20(Build%2012340)-blue.svg)](https://worldofwanos.com/)
-[![Servidor](https://img.shields.io/badge/Servidor-WoW%20Perú-gold.svg)](https://worldofwanos.com/)
+[![WoW Client](https://img.shields.io/badge/WoW%20Client-3.3.5a%20(Build%2012340)-blue.svg)](https://projectjaina.com/)
+[![Servidor](https://img.shields.io/badge/Servidor-WoW%20Perú-gold.svg)](https://projectjaina.com/)
 [![Version](https://img.shields.io/badge/version-1.0.3-brightgreen.svg)](https://github.com/DarckRovert/Wanos_Companion/releases)
 [![Build Status](https://img.shields.io/badge/CI-Passing-success.svg)](https://github.com/DarckRovert/Wanos_Companion/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
@@ -130,4 +130,4 @@ Wanos_Companion/
 
 Distribuido bajo la Licencia **MIT**. Consulta [`LICENSE`](LICENSE) para más información.
 
-**Desarrollado con dedicación para la comunidad de [Project Jaina](https://worldofwanos.com/) — Project Jaina.**
+**Desarrollado con dedicación para la comunidad de [Project Jaina](https://projectjaina.com/) — Project Jaina.**

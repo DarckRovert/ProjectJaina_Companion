@@ -7,7 +7,7 @@ Contiene el hub social meta-ligero, sincronización de modos de juego y comandos
 
 ## 1. Autoría y Desarrollo Oficial
 * **Desarrollador Principal:** DarckRovert (Ingame: `Elnazzareno`) & Project Jaina Team
-* **Ecosistema:** [Project Jaina — Project Jaina](https://worldofwanos.com/)
+* **Ecosistema:** [Project Jaina — Project Jaina](https://projectjaina.com/)
 * **Repositorio Oficial:** [DarckRovert/Wanos_Companion](https://github.com/DarckRovert/Wanos_Companion)
 
 ---

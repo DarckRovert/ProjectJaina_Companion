@@ -39,7 +39,7 @@ Asegúrate de que la carpeta resultante se llame exactamente `Wanos_Companion`.
    ```
 
 > [!WARNING]
-> **Estructura de Directorios:** Si los archivos quedan anidados en `Interface\AddOns\Jaina_Companion\Wanos_Companion\`, el cliente de WoW 3.3.5a no reconocerá el addon en la pantalla de selección de personajes.
+> **Estructura de Directorios:** Si los archivos quedan anidados en `Interface\AddOns\ProjectJaina_Companion\Wanos_Companion\`, el cliente de WoW 3.3.5a no reconocerá el addon en la pantalla de selección de personajes.
 
 ---
 

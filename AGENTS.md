@@ -1,9 +1,9 @@
 # 🤖 Reglas de Contexto y Memoria para Agentes de IA — Wanos_Companion
 
 > **Documento Maestro de Arquitectura y Memoria Operativa**  
-> **Ámbito:** `d:\Project Jaina\Client\Interface\AddOns\Jaina_Companion\`  
+> **Ámbito:** `d:\Project Jaina\Client\Interface\AddOns\ProjectJaina_Companion\`  
 > **Líder del Proyecto:** DarckRovert (Ingame: `Elnazzareno`)  
-> **Servidor Destino:** [Project Jaina](https://worldofwanos.com/) — Project Jaina  
+> **Servidor Destino:** [Project Jaina](https://projectjaina.com/) — Project Jaina  
 > **Entorno de Ejecución:** World of Warcraft 3.3.5a (Build 12340) | Lua 5.1 puro  
 > **Versión de Reglas:** 1.0.1 (Septiembre 2026)
 
@@ -18,7 +18,7 @@ Este addon convive con los **5 sistemas oficiales** de Project Jaina:
 | **`Wanos_Companion`** | `WP_COMP` | Hub social meta-ligero. Telemetría de grupo, badges de modo y anuncios de BattlePass. |
 | **`Jaina_BattlePass`** | `WP_BP` | Pase de Batalla Estacional (50 niveles). |
 | **`Wanos_GameModes`** | `WP_GAMEMODE` | Selector de modos de juego (Normal, Hardcore, Ironman). |
-| **`Wanos_RaidSuite`** | `WP_BP` (EcoBridge) / `Sequito` | Suite táctica de combate, loot y raids. |
+| **`Wanos_RaidSuite`** | `WP_BP` (EcoBridge) / `Jaina` | Suite táctica de combate, loot y raids. |
 | **`WowPeruVisualShop`** | `WP_VISUAL` | Catálogo visual de alas, auras y títulos sincronizado. |
 
 ---
