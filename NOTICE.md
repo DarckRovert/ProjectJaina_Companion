@@ -1,4 +1,4 @@
-# 📜 Aviso Legal y Atribución — Wanos_Companion
+# 📜 Aviso Legal y Atribución — ProjectJaina_Companion
 
 Este repositorio forma parte del ecosistema oficial de **Project Jaina - Project Jaina**.
 Contiene el hub social meta-ligero, sincronización de modos de juego y comandos cross-faction para World of Warcraft 3.3.5a (Build 12340).
@@ -6,9 +6,9 @@ Contiene el hub social meta-ligero, sincronización de modos de juego y comandos
 ---
 
 ## 1. Autoría y Desarrollo Oficial
-* **Desarrollador Principal:** DarckRovert (Ingame: `Elnazzareno`) & Project Jaina Team
-* **Ecosistema:** [Project Jaina — Project Jaina](https://projectjaina.com/)
-* **Repositorio Oficial:** [DarckRovert/Wanos_Companion](https://github.com/DarckRovert/Wanos_Companion)
+* **Desarrollador Principal:** DarckRovert (Ingame: `Elnazzareno`) & Antigravity (Mythos 5)
+* **Ecosistema:** [Project Jaina — Project Jaina](https://darckrovert.github.io/ProjectJaina_Web/)
+* **Repositorio Oficial:** [DarckRovert/ProjectJaina_Companion](https://github.com/DarckRovert/ProjectJaina_Companion)
 
 ---
 

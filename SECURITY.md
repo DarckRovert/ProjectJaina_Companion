@@ -1,4 +1,4 @@
-# 🛡️ Política de Seguridad — Wanos_Companion
+# 🛡️ Política de Seguridad — ProjectJaina_Companion
 
 La seguridad, estabilidad del cliente y protección contra trampas e inyecciones de datos son prioridades fundamentales en el ecosistema **Project Jaina**.
 
@@ -6,7 +6,7 @@ La seguridad, estabilidad del cliente y protección contra trampas e inyecciones
 
 ## 1. Alcance de Seguridad
 
-`Wanos_Companion` es un addon **estrictamente de cliente** (`Client-Only`). No ejecuta scripts en el servidor ni tiene acceso a comandos privilegiados del servidor Eluna (`CharDBExecute`, `AuthDBExecute`).
+`ProjectJaina_Companion` es un addon **estrictamente de cliente** (`Client-Only`). No ejecuta scripts en el servidor ni tiene acceso a comandos privilegiados del servidor Eluna (`CharDBExecute`, `AuthDBExecute`).
 
 ---
 
@@ -14,7 +14,7 @@ La seguridad, estabilidad del cliente y protección contra trampas e inyecciones
 
 ### A. Prevención de Desbordamiento de Buffer (Buffer Overflow)
 - **Límite de Red de WoW 3.3.5a:** Cualquier payload enviado por `SendAddonMessage` que exceda los 255 bytes provoca desconexión silenciosa o corrupción de datos.
-- **Guardia de Tamaño:** `Wanos_Companion` aplica un guardia estricto antes de cualquier transmisión:
+- **Guardia de Tamaño:** `ProjectJaina_Companion` aplica un guardia estricto antes de cualquier transmisión:
   ```lua
   if #payload > 200 then return end
   ```
@@ -37,7 +37,7 @@ Si descubres una vulnerabilidad, fallo de seguridad o riesgo de exploit en este 
 1. **NO** abras un issue público en GitHub.
 2. Envía un reporte privado al equipo de desarrollo:
    - **Líder de Proyecto:** DarckRovert (`darckrovert@gmail.com`)
-   - **Discord Oficial:** Servidor de [Project Jaina](https://projectjaina.com/)
+   - **Discord Oficial:** Servidor de [Project Jaina](https://darckrovert.github.io/ProjectJaina_Web/)
 3. Incluye:
    - Pasos detallados para reproducir el fallo.
    - Versión exacta del cliente (`3.3.5a Build 12340`).

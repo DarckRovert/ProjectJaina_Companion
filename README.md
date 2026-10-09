@@ -1,26 +1,26 @@
-# 🇵🇪 Project Jaina — Companion (v1.0.3)
+# ❄️ Project Jaina — Companion (v1.0.3)
 
 **Versión:** 1.0.3 (WotLK Hardened Edition)  
-**Autor:** DarckRovert (Ingame: `Elnazzareno`) & Project Jaina Team  
-**Servidor Destino:** [Project Jaina](https://projectjaina.com/) — Project Jaina  
+**Autor:** DarckRovert (Ingame: `Elnazzareno`) & Antigravity (Mythos 5)  
+**Servidor Destino:** [Project Jaina](https://darckrovert.github.io/ProjectJaina_Web/) — Project Jaina  
 **Entorno de Ejecución:** World of Warcraft 3.3.5a (Build 12340) | Lua 5.1 puro  
-**Repositorio Oficial:** [DarckRovert/Wanos_Companion](https://github.com/DarckRovert/Wanos_Companion)
+**Repositorio Oficial:** [DarckRovert/ProjectJaina_Companion](https://github.com/DarckRovert/ProjectJaina_Companion)
 
 ---
 
-[![WoW Client](https://img.shields.io/badge/WoW%20Client-3.3.5a%20(Build%2012340)-blue.svg)](https://projectjaina.com/)
-[![Servidor](https://img.shields.io/badge/Servidor-WoW%20Perú-gold.svg)](https://projectjaina.com/)
-[![Version](https://img.shields.io/badge/version-1.0.3-brightgreen.svg)](https://github.com/DarckRovert/Wanos_Companion/releases)
-[![Build Status](https://img.shields.io/badge/CI-Passing-success.svg)](https://github.com/DarckRovert/Wanos_Companion/actions)
+[![WoW Client](https://img.shields.io/badge/WoW%20Client-3.3.5a%20(Build%2012340)-blue.svg)](https://darckrovert.github.io/ProjectJaina_Web/)
+[![Servidor](https://img.shields.io/badge/Servidor-Project%20Jaina-00ccff.svg)](https://darckrovert.github.io/ProjectJaina_Web/)
+[![Version](https://img.shields.io/badge/version-1.0.3-brightgreen.svg)](https://github.com/DarckRovert/ProjectJaina_Companion/releases)
+[![Build Status](https://img.shields.io/badge/CI-Passing-success.svg)](https://github.com/DarckRovert/ProjectJaina_Companion/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 ---
 
-## 🌟 ¿Qué es Wanos_Companion?
+## 🌟 ¿Qué es ProjectJaina_Companion?
 
-**Wanos_Companion** es el **hub social meta-ligero** (~5 KB en disco, < 100 KB de memoria RAM) del ecosistema oficial de addons de **Project Jaina**. Funciona como el puente de telemetría y reconocimiento mutuo entre los jugadores del Project Jaina dentro de grupos de mazmorra y bandas de raid.
+**ProjectJaina_Companion** es el **hub social meta-ligero** (~5 KB en disco, < 100 KB de memoria RAM) del ecosistema oficial de addons de **Project Jaina**. Funciona como el puente de telemetría y reconocimiento mutuo entre los jugadores del Project Jaina dentro de grupos de mazmorra y bandas de raid.
 
-A diferencia de los sistemas pesados, `Wanos_Companion` opera 100% en el lado del cliente sin sobrecargar el servidor Eluna, permitiendo que los miembros de un grupo descubran al instante qué herramientas del servidor tienen instaladas sus compañeros, en qué modo de juego compiten (Normal, Hardcore o Ironman) y celebrando automáticamente en el chat de grupo cada vez que un miembro sube de nivel en el Pase de Batalla estacional.
+A diferencia de los sistemas pesados, `ProjectJaina_Companion` opera 100% en el lado del cliente sin sobrecargar el servidor Eluna, permitiendo que los miembros de un grupo descubran al instante qué herramientas del servidor tienen instaladas sus compañeros, en qué modo de juego compiten (Normal, Hardcore o Ironman) y celebrando automáticamente en el chat de grupo cada vez que un miembro sube de nivel en el Pase de Batalla estacional.
 
 ```
 ┌────────────────────────────────────────────────────────────────────────┐
@@ -41,13 +41,13 @@ A diferencia de los sistemas pesados, `Wanos_Companion` opera 100% en el lado de
 - Al unirse a un grupo (`PARTY_MEMBERS_CHANGED` / `RAID_ROSTER_UPDATE`), emite un broadcast asíncrono con retardo anti-concurrencia de 2 segundos.
 - Detecta en tiempo real la presencia de:
   - 🏆 **`Jaina_BattlePass`**: Pase de Batalla Estacional.
-  - ⚔️ **`Wanos_GameModes`**: Selector y validador de Hardcore/Ironman.
-  - 🛡️ **`Wanos_RaidSuite`**: Plataforma táctica de combate y loot.
-  - 👗 **`WowPeruVisualShop`**: Catálogo cosmético de alas, auras y títulos.
-  - 🤝 **`Wanos_Companion`**: Hub de telemetría social.
+  - ⚔️ **`ProjectJaina_GameModes`**: Selector y validador de Hardcore/Ironman.
+  - 🛡️ **`ProjectJaina_RaidSuite`**: Plataforma táctica de combate y loot.
+  - 👗 **`ProjectJaina_VisualShop`**: Catálogo cosmético de alas, auras y títulos.
+  - 🤝 **`ProjectJaina_Companion`**: Hub de telemetría social.
 
 ### 2. 🛡️ Detección Resiliente de Modos de Juego (Cabina-Ready)
-- Consulta la base local de `Wanos_GameModes_CharDB`.
+- Consulta la base local de `ProjectJaina_GameModes_CharDB`.
 - **Mecanismo Fallback de Supervivencia:** Si la máquina de la cabina de internet reinicia la carpeta `WTF/` (congeladores como Deep Freeze), el addon escanea las auras activas del jugador (`UnitAura`) para identificar buffs de `"hardcore"` o `"ironman"`, garantizando que el badge nunca desaparezca ni muestre datos erróneos.
 
 ### 3. 📢 Anunciador de Hitos de Pase de Batalla
@@ -91,7 +91,7 @@ La comunicación entre clientes opera de manera transparente usando el canal int
 ## 📂 Estructura del Repositorio
 
 ```
-Wanos_Companion/
+ProjectJaina_Companion/
 ├── .github/
 │   └── workflows/
 │       └── ci.yml               # Pipeline de integración continua GitHub Actions
@@ -108,7 +108,7 @@ Wanos_Companion/
 ├── LICENSE                      # Licencia MIT
 ├── README.md                    # Documento maestro informativo
 ├── SECURITY.md                  # Políticas de seguridad e integridad de red
-└── Wanos_Companion.toc        # Metadatos del cliente WoW 3.3.5a
+└── ProjectJaina_Companion.toc        # Metadatos del cliente WoW 3.3.5a
 ```
 
 ---
@@ -120,9 +120,9 @@ Wanos_Companion/
 - **Servidor:** AzerothCore / TrinityCore con soporte para Project Jaina - Project Jaina.
 - **Addons Opcionales (Sinérgicos):**
   - [Jaina_BattlePass](https://github.com/DarckRovert/Jaina_BattlePass)
-  - [Wanos_GameModes](https://github.com/DarckRovert/Wanos_GameModes)
-  - [Wanos_RaidSuite](https://github.com/DarckRovert/Wanos_RaidSuite)
-  - [WowPeruVisualShop](https://github.com/DarckRovert/WowPeruVisualShop)
+  - [ProjectJaina_GameModes](https://github.com/DarckRovert/ProjectJaina_GameModes)
+  - [ProjectJaina_RaidSuite](https://github.com/DarckRovert/ProjectJaina_RaidSuite)
+  - [ProjectJaina_VisualShop](https://github.com/DarckRovert/ProjectJaina_VisualShop)
 
 ---
 
@@ -130,4 +130,4 @@ Wanos_Companion/
 
 Distribuido bajo la Licencia **MIT**. Consulta [`LICENSE`](LICENSE) para más información.
 
-**Desarrollado con dedicación para la comunidad de [Project Jaina](https://projectjaina.com/) — Project Jaina.**
+**Desarrollado con dedicación para la comunidad de [Project Jaina](https://darckrovert.github.io/ProjectJaina_Web/) — Project Jaina.**

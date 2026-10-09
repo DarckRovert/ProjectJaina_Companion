@@ -1,4 +1,4 @@
-# 💻 Especificación de API y Red — Wanos_Companion
+# 💻 Especificación de API y Red — ProjectJaina_Companion
 
 Documento técnico de arquitectura de software y protocolo de red para desarrolladores y addons integrados en el ecosistema **Project Jaina**.
 
@@ -9,7 +9,7 @@ Documento técnico de arquitectura de software y protocolo de red para desarroll
 El addon expone un único namespace global en el entorno Lua del cliente:
 
 ```lua
-Wanos_Companion = {
+ProjectJaina_Companion = {
     Config = {
         Version          = "1.0.1",
         AnnounceChannel  = "GROUP",   -- "GROUP" | "PARTY" | "SAY" | ""
@@ -64,7 +64,7 @@ WP_ADDONS:<addon_label_1>,<addon_label_2>,...|<GAME_MODE>
 
 ## 3. Escucha de Eventos de Otros Addons
 
-`Wanos_Companion` escucha pasivamente los prefijos de red de otros sistemas para enriquecer la experiencia social sin generar acoplamiento directo:
+`ProjectJaina_Companion` escucha pasivamente los prefijos de red de otros sistemas para enriquecer la experiencia social sin generar acoplamiento directo:
 
 ### Prefijo `WP_BP` (Jaina_BattlePass)
 - Escucha paquetes entrantes `BP_RES_XP` y `BP_RES_SYNC`.
@@ -74,11 +74,11 @@ WP_ADDONS:<addon_label_1>,<addon_label_2>,...|<GAME_MODE>
 
 ## 4. Consulta Externa de Estado
 
-Otros addons pueden consultar si `Wanos_Companion` está activo o inspeccionar su configuración mediante comprobaciones estándar:
+Otros addons pueden consultar si `ProjectJaina_Companion` está activo o inspeccionar su configuración mediante comprobaciones estándar:
 
 ```lua
-if _G.Wanos_Companion then
-    local comp = _G.Wanos_Companion
+if _G.ProjectJaina_Companion then
+    local comp = _G.ProjectJaina_Companion
     local version = comp.Config and comp.Config.Version
     -- Companion está activo en el cliente
 end
@@ -88,6 +88,6 @@ end
 
 ## 5. Persistencia (`SavedVariables`)
 
-- **Variable Global:** `WanosCompanion_DB`
-- Se inicializa en el evento `ADDON_LOADED` al confirmarse la carga de `Wanos_Companion`.
+- **Variable Global:** `Project JainaCompanion_DB`
+- Se inicializa en el evento `ADDON_LOADED` al confirmarse la carga de `ProjectJaina_Companion`.
 - Almacena personalizaciones del jugador (preferencias de canal de anuncio, toggle de depuración).

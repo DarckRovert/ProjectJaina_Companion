@@ -20,7 +20,7 @@ C.Config = {
         { name = "ProjectJaina_Companion",   label = "Companion",  color = "FFAB47BC" },
         { name = "ProjectJaina_GameModes",   label = "GameModes",  color = "FF4FC3F7" },
         { name = "ProjectJaina_RaidSuite",   label = "RaidSuite",  color = "FF81C784" },
-        { name = "WowPeruVisualShop",   label = "VisualShop", color = "FFCE93D8" },
+        { name = "ProjectJaina_VisualShop",   label = "VisualShop", color = "FFCE93D8" },
         { name = "Talented",            label = "Talented",   color = "FFF57C00" },
         { name = "ProjectJaina_Wardrobe",    label = "Wardrobe",   color = "FFE6C280" },
     },

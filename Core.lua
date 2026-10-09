@@ -534,8 +534,8 @@ local function CreateMinimapButton()
         local angle = math.deg(math.atan2(py - my, px - mx))
         if angle < 0 then angle = angle + 360 end
 
-        Wanos_Companion_DB = Wanos_Companion_DB or ProjectJainaCompanion_DB or {}
-            ProjectJainaCompanion_DB = Wanos_Companion_DB
+        ProjectJaina_Companion_DB = ProjectJaina_Companion_DB or ProjectJainaCompanion_DB or {}
+            ProjectJainaCompanion_DB = ProjectJaina_Companion_DB
         ProjectJainaCompanion_DB.minimapAngle = angle
 
         UpdateMinimapBtnPosition(self, angle)
@@ -631,11 +631,11 @@ end)
 eventFrame:SetScript("OnEvent", function(self, event, ...)
     if event == "ADDON_LOADED" then
         local name = ...
-        if name == "Wanos_Companion" or name == "ProjectJaina_Companion" then
+        if name == "ProjectJaina_Companion" or name == "ProjectJaina_Companion" then
             addonLoaded = true
             -- Cargar DB persistente
-            Wanos_Companion_DB = Wanos_Companion_DB or ProjectJainaCompanion_DB or {}
-            ProjectJainaCompanion_DB = Wanos_Companion_DB
+            ProjectJaina_Companion_DB = ProjectJaina_Companion_DB or ProjectJainaCompanion_DB or {}
+            ProjectJainaCompanion_DB = ProjectJaina_Companion_DB
             if ProjectJainaCompanion_DB.AnnounceChannel ~= nil then
                 C.Config.AnnounceChannel = ProjectJainaCompanion_DB.AnnounceChannel
             end

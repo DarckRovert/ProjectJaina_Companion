@@ -1,9 +1,9 @@
-# 🤖 Reglas de Contexto y Memoria para Agentes de IA — Wanos_Companion
+# 🤖 Reglas de Contexto y Memoria para Agentes de IA — ProjectJaina_Companion
 
 > **Documento Maestro de Arquitectura y Memoria Operativa**  
 > **Ámbito:** `d:\Project Jaina\Client\Interface\AddOns\ProjectJaina_Companion\`  
 > **Líder del Proyecto:** DarckRovert (Ingame: `Elnazzareno`)  
-> **Servidor Destino:** [Project Jaina](https://projectjaina.com/) — Project Jaina  
+> **Servidor Destino:** [Project Jaina](https://darckrovert.github.io/ProjectJaina_Web/) — Project Jaina  
 > **Entorno de Ejecución:** World of Warcraft 3.3.5a (Build 12340) | Lua 5.1 puro  
 > **Versión de Reglas:** 1.0.1 (Septiembre 2026)
 
@@ -15,11 +15,11 @@ Este addon convive con los **5 sistemas oficiales** de Project Jaina:
 
 | Addon / Sistema | Prefijo de Red | Función |
 | :--- | :--- | :--- |
-| **`Wanos_Companion`** | `WP_COMP` | Hub social meta-ligero. Telemetría de grupo, badges de modo y anuncios de BattlePass. |
+| **`ProjectJaina_Companion`** | `WP_COMP` | Hub social meta-ligero. Telemetría de grupo, badges de modo y anuncios de BattlePass. |
 | **`Jaina_BattlePass`** | `WP_BP` | Pase de Batalla Estacional (50 niveles). |
-| **`Wanos_GameModes`** | `WP_GAMEMODE` | Selector de modos de juego (Normal, Hardcore, Ironman). |
-| **`Wanos_RaidSuite`** | `WP_BP` (EcoBridge) / `Jaina` | Suite táctica de combate, loot y raids. |
-| **`WowPeruVisualShop`** | `WP_VISUAL` | Catálogo visual de alas, auras y títulos sincronizado. |
+| **`ProjectJaina_GameModes`** | `WP_GAMEMODE` | Selector de modos de juego (Normal, Hardcore, Ironman). |
+| **`ProjectJaina_RaidSuite`** | `WP_BP` (EcoBridge) / `Jaina` | Suite táctica de combate, loot y raids. |
+| **`ProjectJaina_VisualShop`** | `WP_VISUAL` | Catálogo visual de alas, auras y títulos sincronizado. |
 
 ---
 

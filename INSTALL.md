@@ -1,6 +1,6 @@
-# 📦 Guía de Instalación — Wanos_Companion
+# 📦 Guía de Instalación — ProjectJaina_Companion
 
-Instrucciones oficiales para instalar y verificar **Wanos_Companion** en el cliente **World of Warcraft 3.3.5a (Build 12340)** del servidor **Project Jaina - Project Jaina**.
+Instrucciones oficiales para instalar y verificar **ProjectJaina_Companion** en el cliente **World of Warcraft 3.3.5a (Build 12340)** del servidor **Project Jaina - Project Jaina**.
 
 ---
 
@@ -19,27 +19,27 @@ Abre tu terminal en la carpeta de AddOns:
 
 ```bash
 cd "d:\Project Jaina\Client\Interface\AddOns\"
-git clone https://github.com/DarckRovert/Wanos_Companion.git
+git clone https://github.com/DarckRovert/ProjectJaina_Companion.git
 ```
 
-Asegúrate de que la carpeta resultante se llame exactamente `Wanos_Companion`.
+Asegúrate de que la carpeta resultante se llame exactamente `ProjectJaina_Companion`.
 
 ### Método 2: Descarga Manual (.ZIP)
 
-1. Descarga la última versión desde [Releases en GitHub](https://github.com/DarckRovert/Wanos_Companion/releases).
+1. Descarga la última versión desde [Releases en GitHub](https://github.com/DarckRovert/ProjectJaina_Companion/releases).
 2. Extrae el contenido en la ruta:
    ```
    World of Warcraft/Interface/AddOns/
    ```
 3. Verifica que la ruta final de los archivos sea:
    ```
-   Interface/AddOns/Wanos_Companion/Wanos_Companion.toc
-   Interface/AddOns/Wanos_Companion/Config.lua
-   Interface/AddOns/Wanos_Companion/Core.lua
+   Interface/AddOns/ProjectJaina_Companion/ProjectJaina_Companion.toc
+   Interface/AddOns/ProjectJaina_Companion/Config.lua
+   Interface/AddOns/ProjectJaina_Companion/Core.lua
    ```
 
 > [!WARNING]
-> **Estructura de Directorios:** Si los archivos quedan anidados en `Interface\AddOns\ProjectJaina_Companion\Wanos_Companion\`, el cliente de WoW 3.3.5a no reconocerá el addon en la pantalla de selección de personajes.
+> **Estructura de Directorios:** Si los archivos quedan anidados en `Interface\AddOns\ProjectJaina_Companion\ProjectJaina_Companion\`, el cliente de WoW 3.3.5a no reconocerá el addon en la pantalla de selección de personajes.
 
 ---
 
@@ -77,7 +77,7 @@ Una vez dentro del mundo:
 
 ### 1. El comando `/companion` no responde
 - Verifica que el addon esté habilitado en el menú de AddOns de la pantalla de personajes.
-- Comprueba que la carpeta se llame exactamente `Wanos_Companion` (sin sufijos como `-main` o `-master`).
+- Comprueba que la carpeta se llame exactamente `ProjectJaina_Companion` (sin sufijos como `-main` o `-master`).
 
 ### 2. No se ven los addons de mis compañeros
 - Los compañeros deben tener al menos un addon del ecosistema Project Jaina y estar en el mismo grupo o banda (`PARTY` o `RAID`).
