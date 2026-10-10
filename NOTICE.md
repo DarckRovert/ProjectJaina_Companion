@@ -1,25 +1,28 @@
 # 📜 Aviso Legal y Atribución — ProjectJaina_Companion
 
-Este repositorio forma parte del ecosistema oficial de **Project Jaina - Project Jaina**.
-Contiene el hub social meta-ligero, sincronización de modos de juego y comandos cross-faction para World of Warcraft 3.3.5a (Build 12340).
+Este repositorio forma parte del ecosistema oficial de **Project Jaina**.
+Contiene Gestor táctico de mascotas de compañía y vanidad con invocador inteligente, telemetría y protocolo P2P bidireccional con jitter pseudo-aleatorio anti-colisiones. para el cliente World of Warcraft 3.3.5a (Build 12340).
 
 ---
 
 ## 1. Autoría y Desarrollo Oficial
 * **Desarrollador Principal:** DarckRovert (Ingame: `Elnazzareno`) & Antigravity (Mythos 5)
-* **Ecosistema:** [Project Jaina — Project Jaina](https://darckrovert.github.io/ProjectJaina_Web/)
+* **Ecosistema:** [Project Jaina Oficial](https://darckrovert.github.io/ProjectJaina_Web/)
 * **Repositorio Oficial:** [DarckRovert/ProjectJaina_Companion](https://github.com/DarckRovert/ProjectJaina_Companion)
 
 ---
 
-## 2. Inmunidad a Taint y Filosofía Cross-Faction
-* **Comandos Nativos:** `/comerciar` y `/invitar` interactúan con las funciones nativas `InitiateTrade` e `InviteUnit`.
-* **Aislamiento Total de FrameXML:** Este módulo **NO modifica ni engancha (hook)** la tabla global `UnitPopupMenus` de Blizzard. Esto garantiza inmunidad absoluta contra errores de interfaz bloqueada (taint) en menús contextuales, asignación de focos y addons de curación (`HealBot`, `Grid`).
-* **Compatibilidad de Servidor:** Diseñado para servidores AzerothCore con `AllowTwoSide.Interaction.Group = 1`.
+## 2. Arquitectura y Protocolo Autoritativo
+* **Prefijo de Red:** `WP_COMP`
+* **Integración Servidor:** `Protocolo P2P y sincronización con character_spell`
+* **Variables Guardadas:** `ProjectJaina_CompanionDB`
+* **Comandos Slash:** `/companion, /pjc`
 
 ---
 
-## 3. Cumplimiento de Políticas de Interfaz
-En estricto cumplimiento de la Política de Interfaz de Usuario Personalizada de Blizzard (Blizzard Custom UI Policy):
-1. Este software es de distribución libre y sin fines comerciales.
-2. Toda la telemetría se restringe a canales locales de grupo/banda (`PARTY`, `RAID`) bajo el prefijo `WP_COMP`.
+## 3. Cumplimiento de Políticas de Interfaz (Blizzard Custom UI Policy)
+En estricto cumplimiento de la Política de Interfaz de Usuario Personalizada de Blizzard Entertainment (2009):
+1. **Gratuito y Abierto:** Este software es completamente gratuito y de código abierto para la comunidad de jugadores.
+2. **Sin Alteración de Binarios:** No realiza ingeniería inversa, inyección de código ni altera binarios del juego (`WoW.exe`).
+3. **Aislamiento FrameXML:** Respeta el aislamiento de ejecución en FrameXML y no genera taint en subsistemas protegidos de combate.
+4. **Sin Publicidad ni Cobro:** No incluye anuncios publicitarios ni solicita compensación monetaria directa para el uso de sus funciones in-game.

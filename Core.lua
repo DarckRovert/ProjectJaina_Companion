@@ -72,6 +72,9 @@ end
 local function IsAddonLoaded(name)
     if not name or not _G.IsAddOnLoaded then return false end
     local loaded = _G.IsAddOnLoaded(name)
+    if not loaded and not name:find("^ProjectJaina_") then
+        loaded = _G.IsAddOnLoaded("ProjectJaina_" .. name)
+    end
     return (loaded and true) or false
 end
 
@@ -517,7 +520,7 @@ local function CreateMinimapButton()
     local icon = btn:CreateTexture(nil, "BACKGROUND")
     icon:SetSize(20, 20)
     icon:SetPoint("CENTER", btn, "CENTER", 0, 0)
-    icon:SetTexture("Interface\\AddOns\\Jaina_Companion\\Textures\\jaina_icon.tga")
+    icon:SetTexture("Interface\\AddOns\\ProjectJaina_Companion\\Textures\\jaina_icon.tga")
 
     local border = btn:CreateTexture(nil, "OVERLAY")
     border:SetSize(52, 52)

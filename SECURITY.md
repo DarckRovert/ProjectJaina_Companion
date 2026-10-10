@@ -1,44 +1,35 @@
 # 🛡️ Política de Seguridad — ProjectJaina_Companion
 
-La seguridad, estabilidad del cliente y protección contra trampas e inyecciones de datos son prioridades fundamentales en el ecosistema **Project Jaina**.
+**Proyecto:** Project Jaina  
+**Estándar de Seguridad:** Staff Software Engineer L9 (Mythos 5)  
+**Fecha de Actualización:** 10 de Octubre de 2026  
 
 ---
 
-## 1. Alcance de Seguridad
+## 1. Alcance y Filosofía de Seguridad
 
-`ProjectJaina_Companion` es un addon **estrictamente de cliente** (`Client-Only`). No ejecuta scripts en el servidor ni tiene acceso a comandos privilegiados del servidor Eluna (`CharDBExecute`, `AuthDBExecute`).
-
----
-
-## 2. Medidas de Protección Implementadas
-
-### A. Prevención de Desbordamiento de Buffer (Buffer Overflow)
-- **Límite de Red de WoW 3.3.5a:** Cualquier payload enviado por `SendAddonMessage` que exceda los 255 bytes provoca desconexión silenciosa o corrupción de datos.
-- **Guardia de Tamaño:** `ProjectJaina_Companion` aplica un guardia estricto antes de cualquier transmisión:
-  ```lua
-  if #payload > 200 then return end
-  ```
-- El tamaño promedio de los payloads es de ~50 bytes, muy por debajo de la zona de riesgo.
-
-### B. Inmunidad a Inyección en Chat
-- **Limpieza de Códigos de Escape:** El cliente WoW 3.3.5a puede desformatear el chat o activar filtros automáticos si los mensajes contienen códigos de color `|c` mal formados o cadenas binarias.
-- Todos los anuncios públicos enviados por `SendChatMessage` utilizan exclusivamente texto plano sin códigos de formato.
-
-### C. Protección contra Denegación de Servicio en Cliente (DoS / CPU Thrashing)
-- No se realizan comprobaciones ni llamadas de red en cada frame (`OnUpdate` sin acumulador).
-- Se utiliza un acumulador de tiempo delta con un intervalo de **5 segundos**, garantizando que el uso de ciclos de CPU sea indistinguible de cero (0.01% de frame time).
+La seguridad de **ProjectJaina_Companion** se fundamenta en el aislamiento estricto del entorno de ejecución de Lua 5.1 dentro del cliente World of Warcraft 3.3.5a (Build 12340) y en la validación autoritativa en el servidor.
 
 ---
 
-## 3. Reporte de Vulnerabilidades
+## 2. Principios de Blindaje de Código
 
-Si descubres una vulnerabilidad, fallo de seguridad o riesgo de exploit en este addon:
+1. **Aislamiento de FrameXML y Anti-Taint:**
+   - Las funciones que interactúan con botones de acción protegidos o macros de combate no contaminan las variables de entorno global seguras.
+   - Se evita estrictamente la modificación de tablas globales del sistema sin nombres de espacio propios (`PJ_*` o nombres de addon).
+2. **Límite de Red y Prevención de Desbordamiento:**
+   - La API `SendAddonMessage` está restringida a un máximo absoluto de **255 bytes por paquete**. Todo payload emitido se fragmenta o comprime en estructuras compactas.
+   - Prefijo auditado: `WP_COMP`.
+3. **Validación Autoritativa en Servidor:**
+   - El cliente de interfaz es tratado como un medio de presentación potencialmente no confiable. Ninguna transacción de ítems, progreso, monedas o recompensas es decidida por el cliente; el servidor Eluna / C++ (`Protocolo P2P y sincronización con character_spell`) valida y aplica los cambios en MySQL.
+4. **Higiene de Strings y Sanitización:**
+   - Toda entrada de usuario proveniente de cajas de texto (`EditBox`) o comandos slash (`/companion, /pjc`) es limpiada contra inyecciones de secuencias de escape y caracteres nulos.
 
-1. **NO** abras un issue público en GitHub.
-2. Envía un reporte privado al equipo de desarrollo:
-   - **Líder de Proyecto:** DarckRovert (`darckrovert@gmail.com`)
-   - **Discord Oficial:** Servidor de [Project Jaina](https://darckrovert.github.io/ProjectJaina_Web/)
-3. Incluye:
-   - Pasos detallados para reproducir el fallo.
-   - Versión exacta del cliente (`3.3.5a Build 12340`).
-   - Addons coexistentes involucrados.
+---
+
+## 3. Reporte Responsable de Vulnerabilidades
+
+Si descubres una vulnerabilidad de seguridad o un vector de explotación en este AddOn:
+- **No lo divulgues públicamente.**
+- Notifícalo de inmediato a través del canal privado de ingeniería en el portal oficial: [Project Jaina Contacto](https://darckrovert.github.io/ProjectJaina_Web/).
+- El equipo técnico investigará y aplicará el parche correctivo de forma expedita.
