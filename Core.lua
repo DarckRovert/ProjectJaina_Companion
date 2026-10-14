@@ -379,14 +379,19 @@ local function ExecuteOrWarn(slashKey, fallbackKey, moduleName)
         SlashCmdList[fallbackKey]("")
     elseif moduleName == "MultiBot" and MultiBot and MultiBot.ToggleMainUIVisibility then
         MultiBot.ToggleMainUIVisibility()
+    elseif moduleName == "Chatter LLM" and Chatter and Chatter.Toggle then
+        Chatter:Toggle()
     else
         CPrint(string.format("|cFFFF4444El modulo %s no esta activo o instalado.|r", moduleName))
     end
 end
 
 local function OpenHubMenu(anchor)
+    local headerTitle = (C.Progression and C.Progression.name)
+        and string.format("|cFFD4AF37Project Jaina|r - %s (Cap %d)", C.Progression.name, C.Progression.levelCap or 60)
+        or "|cFFD4AF37Project Jaina|r - Centro de Control"
     local menuList = {
-        { text = "|cFFD4AF37Project Jaina|r - Centro de Control", isTitle = true, notCheckable = true },
+        { text = headerTitle, isTitle = true, notCheckable = true },
         { text = "|cFFFFD100Pase de Batalla|r (/bp)", notCheckable = true, func = function()
             ExecuteOrWarn("WOWPERUBP", "BP", "BattlePass")
         end },
@@ -400,16 +405,22 @@ local function OpenHubMenu(anchor)
             ExecuteOrWarn("WOWPERU_GRAPHICS", nil, "Graficos HD")
         end },
         { text = "|cFF00FFCCGestor de Bots con IA|r (/bots)", notCheckable = true, func = function()
-            ExecuteOrWarn("CHATTER", nil, "Chatter LLM")
+            ExecuteOrWarn("CHATTER", "LLMC", "Chatter LLM")
         end },
         { text = "|cFFFFD100Playerbots (MultiBot)|r (/multibot)", notCheckable = true, func = function()
             ExecuteOrWarn("MULTIBOT", "ACECONSOLE_MULTIBOT", "MultiBot")
+        end },
+        { text = "|cFFD4AF37Barra Táctica de Bots|r (/botbar)", notCheckable = true, func = function()
+            if C.ToggleTacticalBar then C.ToggleTacticalBar() end
         end },
         { text = "|cFFFFD100Tienda de Visuales|r (/tienda)", notCheckable = true, func = function()
             ExecuteOrWarn("WOWPERU_VISUAL", nil, "Tienda Visual")
         end },
         { text = "|cFFFFD100LoreHUD (Subtítulos 3D)|r (/lorehud)", notCheckable = true, func = function()
             ExecuteOrWarn("LOREHUD", nil, "LoreHUD")
+        end },
+        { text = "|cFF00CCFFVoz Espacial 3D|r (/voz)", notCheckable = true, func = function()
+            ExecuteOrWarn("PROJECTJAINA_VOZ", "VOZ", "Voz 3D")
         end },
         { text = " ", notCheckable = true, disabled = true },
         { text = "Herramientas de Grupo", hasArrow = true, notCheckable = true,
@@ -560,6 +571,11 @@ local function CreateMinimapButton()
         GameTooltip:SetOwner(self, "ANCHOR_LEFT")
         GameTooltip:AddLine("|cFFD4AF37Project Jaina Companion|r", 1, 1, 1)
         GameTooltip:AddLine("Centro de Control del Ecosistema", 0.8, 0.8, 0.8)
+        if C.Progression and C.Progression.name then
+            GameTooltip:AddLine(" ")
+            GameTooltip:AddLine(string.format("|cFFD4AF37Era del Reino:|r |cff39d353%s|r", C.Progression.name), 1, 1, 1)
+            GameTooltip:AddLine(string.format("|cFFD4AF37Tope de Nivel:|r |cffffd700%d|r", C.Progression.levelCap or 60), 0.9, 0.9, 0.9)
+        end
         GameTooltip:AddLine("|cFF888888Desarrollo: DarckRovert (Elnazzareno)|r", 0.7, 0.7, 0.7)
         GameTooltip:AddLine(" ")
         GameTooltip:AddLine("|cFFFFD100Click Izquierdo:|r Abrir Menú Central de Project Jaina", 0.2, 1, 0.2)
@@ -645,13 +661,23 @@ eventFrame:SetScript("OnEvent", function(self, event, ...)
             if ProjectJainaCompanion_DB.Debug ~= nil then
                 C.Config.Debug = ProjectJainaCompanion_DB.Debug
             end
+            if ProjectJainaCompanion_DB.Progression then
+                C.Progression = ProjectJainaCompanion_DB.Progression
+            end
             CreateMinimapButton()
-            CPrint("v" .. C.Config.Version .. " cargado. Usa /companion")
+            if C.CreateTacticalBar then C.CreateTacticalBar() end
+            CPrint("v" .. C.Config.Version .. " cargado. Usa /companion o /botbar")
         end
 
     elseif event == "PLAYER_ENTERING_WORLD" then
         if RegisterAddonMessagePrefix then
             RegisterAddonMessagePrefix(C.Config.AddonPrefix)
+            RegisterAddonMessagePrefix("JAINA_PHASE_SYNC")
+        end
+        -- Solicitar estado de progresión temporal del reino al servidor
+        local pName = UnitName("player")
+        if pName and pName ~= "" and pName ~= UNKNOWNOBJECT then
+            SendAddonMessage("JAINA_PHASE_SYNC", "REQ_SYNC", "WHISPER", pName)
         end
         -- Inicializar nivel base de BattlePass si ya completó sync
         if Jaina_BattlePass and Jaina_BattlePass.Data and Jaina_BattlePass.Data.hasSyncedOnce then
@@ -694,6 +720,20 @@ eventFrame:SetScript("OnEvent", function(self, event, ...)
             end
         end
 
+        -- Escuchar sincronización autoritativa de fase del reino
+        if prefix == "JAINA_PHASE_SYNC" and message then
+            local op, phaseId, levelCap, phaseName = message:match("^([^:]+):([^:]+):([^:]+):(.+)$")
+            if op == "SYNC" then
+                C.Progression = {
+                    phase = phaseId,
+                    levelCap = tonumber(levelCap) or 60,
+                    name = phaseName or "World of Warcraft Classic"
+                }
+                ProjectJaina_Companion_DB = ProjectJaina_Companion_DB or {}
+                ProjectJaina_Companion_DB.Progression = C.Progression
+            end
+        end
+
     elseif event == "RAID_ROSTER_UPDATE" or event == "PARTY_MEMBERS_CHANGED" then
         PruneGroupStatus()
         -- Resetear el timer de debounce para no spamear en formaciones masivas de raid
@@ -701,3 +741,240 @@ eventFrame:SetScript("OnEvent", function(self, event, ...)
         rosterDebounceActive = true
     end
 end)
+
+-- ================================================================
+-- CONTROL TÁCTICO DE PLAYERBOTS (Project Jaina v2.0)
+-- Barra flotante de comandos rápidos, keybindings nativos y reclutamiento por rol
+-- ================================================================
+_G["BINDING_HEADER_PROJECTJAINA_COMPANION"] = "|cFFD4AF37Project Jaina|r - Control Táctico"
+_G["BINDING_NAME_PROJECTJAINA_COMPANION_FOLLOW"] = "Bots: Seguir"
+_G["BINDING_NAME_PROJECTJAINA_COMPANION_STAY"] = "Bots: Quedarse / Alto"
+_G["BINDING_NAME_PROJECTJAINA_COMPANION_ATTACK"] = "Bots: Atacar objetivo"
+_G["BINDING_NAME_PROJECTJAINA_COMPANION_PULL"] = "Bots: Auto-Pull (Tanque)"
+_G["BINDING_NAME_PROJECTJAINA_COMPANION_PASSIVE"] = "Bots: Modo Pasivo"
+_G["BINDING_NAME_PROJECTJAINA_COMPANION_RECRUIT_TANK"] = "Reclutar Bot: Tanque"
+_G["BINDING_NAME_PROJECTJAINA_COMPANION_RECRUIT_HEALER"] = "Reclutar Bot: Sanador"
+_G["BINDING_NAME_PROJECTJAINA_COMPANION_RECRUIT_DPS"] = "Reclutar Bot: DPS"
+_G["BINDING_NAME_PROJECTJAINA_COMPANION_REGEAR"] = "Bots: Reequipar / Actualizar Equipo"
+_G["BINDING_NAME_PROJECTJAINA_COMPANION_TOGGLEBAR"] = "Alternar Barra Táctica de Bots"
+
+function C.SendCommand(action, arg)
+    if not action then return end
+    if action == "follow" then
+        SendChatMessage(".bot follow", "SAY")
+    elseif action == "stay" then
+        SendChatMessage(".bot stay", "SAY")
+    elseif action == "attack" then
+        SendChatMessage(".bot attack", "SAY")
+    elseif action == "pull" then
+        SendChatMessage(".bot auto pull", "SAY")
+    elseif action == "passive" then
+        SendChatMessage(".bot passive", "SAY")
+    elseif action == "recruit_tank" then
+        SendChatMessage(".bot role recruit tank", "SAY")
+    elseif action == "recruit_healer" then
+        SendChatMessage(".bot role recruit healer", "SAY")
+    elseif action == "recruit_dps" then
+        SendChatMessage(".bot role recruit dps", "SAY")
+    elseif action == "regear" then
+        SendChatMessage(".bot regear", "SAY")
+    elseif action == "raid" then
+        local size = arg or "5man"
+        SendChatMessage(".bot raid recruit " .. size, "SAY")
+    end
+end
+
+local tacticalBar = nil
+local recruitMenu = nil
+
+function C.ToggleTacticalBar()
+    if not tacticalBar then
+        C.CreateTacticalBar()
+    end
+    if tacticalBar:IsShown() then
+        tacticalBar:Hide()
+        if ProjectJaina_Companion_DB then ProjectJaina_Companion_DB.BarHidden = true end
+    else
+        tacticalBar:Show()
+        if ProjectJaina_Companion_DB then ProjectJaina_Companion_DB.BarHidden = false end
+    end
+end
+
+function C.ToggleRecruitMenu(anchorFrame)
+    if not recruitMenu then
+        recruitMenu = CreateFrame("Frame", "ProjectJaina_RecruitMenu", UIParent)
+        recruitMenu:SetSize(140, 164)
+        recruitMenu:SetBackdrop({
+            bgFile = "Interface\\Buttons\\WHITE8X8",
+            edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+            tile = true, tileSize = 16, edgeSize = 10,
+            insets = { left = 2, right = 2, top = 2, bottom = 2 }
+        })
+        recruitMenu:SetBackdropColor(0.04, 0.05, 0.08, 0.95)
+        recruitMenu:SetBackdropBorderColor(0.83, 0.69, 0.22, 1.0)
+        recruitMenu:SetFrameStrata("DIALOG")
+
+        local items = {
+            { text = "|cFF0070DETanque (Tank)|r", cmd = "recruit_tank" },
+            { text = "|cFF00FF00Sanador (Healer)|r", cmd = "recruit_healer" },
+            { text = "|cFFFF2020DPS|r", cmd = "recruit_dps" },
+            { text = "|cFFFFD100Grupo 5 (5-man)|r", cmd = "raid", arg = "5man" },
+            { text = "|cFFFF8000Banda 10 (10-man)|r", cmd = "raid", arg = "10man" },
+            { text = "|cFF9932CCBanda 25 (25-man)|r", cmd = "raid", arg = "25man" },
+        }
+
+        for i, item in ipairs(items) do
+            local b = CreateFrame("Button", nil, recruitMenu)
+            b:SetSize(130, 22)
+            b:SetPoint("TOP", recruitMenu, "TOP", 0, -6 - (i - 1) * 24)
+
+            local fontStr = b:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+            fontStr:SetPoint("LEFT", b, "LEFT", 8, 0)
+            fontStr:SetText(item.text)
+
+            local highlight = b:CreateTexture(nil, "HIGHLIGHT")
+            highlight:SetAllPoints()
+            highlight:SetTexture("Interface\\QuestFrame\\UI-QuestTitleHighlight")
+            highlight:SetAlpha(0.35)
+
+            b:SetScript("OnClick", function()
+                C.SendCommand(item.cmd, item.arg)
+                recruitMenu:Hide()
+            end)
+        end
+    end
+
+    if recruitMenu:IsShown() then
+        recruitMenu:Hide()
+    else
+        recruitMenu:ClearAllPoints()
+        recruitMenu:SetPoint("BOTTOMLEFT", anchorFrame, "TOPLEFT", 0, 8)
+        recruitMenu:Show()
+    end
+end
+
+function C.CreateTacticalBar()
+    if tacticalBar then return end
+
+    tacticalBar = CreateFrame("Frame", "ProjectJaina_TacticalBar", UIParent)
+    tacticalBar:SetSize(250, 46)
+    tacticalBar:SetPoint("CENTER", UIParent, "CENTER", 0, -220)
+    tacticalBar:SetMovable(true)
+    tacticalBar:EnableMouse(true)
+    tacticalBar:RegisterForDrag("LeftButton")
+    tacticalBar:SetScript("OnDragStart", tacticalBar.StartMoving)
+    tacticalBar:SetScript("OnDragStop", function(self)
+        self:StopMovingOrSizing()
+        local point, _, relPoint, x, y = self:GetPoint()
+        ProjectJaina_Companion_DB = ProjectJaina_Companion_DB or {}
+        ProjectJaina_Companion_DB.TacticalPos = { point, relPoint, x, y }
+    end)
+    tacticalBar:SetClampedToScreen(true)
+
+    tacticalBar:SetBackdrop({
+        bgFile = "Interface\\Buttons\\WHITE8X8",
+        edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+        tile = true, tileSize = 16, edgeSize = 12,
+        insets = { left = 3, right = 3, top = 3, bottom = 3 }
+    })
+    tacticalBar:SetBackdropColor(0.04, 0.06, 0.10, 0.90)
+    tacticalBar:SetBackdropBorderColor(0.83, 0.69, 0.22, 0.95)
+
+    local title = tacticalBar:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+    title:SetPoint("TOPLEFT", tacticalBar, "TOPLEFT", 8, -4)
+    title:SetText("|cFFD4AF37JAINA|r Táctico")
+
+    local btnDefs = {
+        { name = "Follow", tip = "Seguir (Follow)\n|cFF888888Ordena a los bots seguirte de cerca.|r", icon = "Interface\\Icons\\Ability_Tracking", cmd = "follow" },
+        { name = "Stay", tip = "Alto / Esperar (Stay)\n|cFF888888Mantiene a los bots en su posición actual.|r", icon = "Interface\\Icons\\Spell_Nature_StoneClawTotem", cmd = "stay" },
+        { name = "Attack", tip = "Atacar Objetivo (Attack)\n|cFF888888Ordena a los bots atacar a tu objetivo actual.|r", icon = "Interface\\Icons\\Ability_DualWield", cmd = "attack" },
+        { name = "Pull", tip = "Auto-Pull del Tanque\n|cFF888888El bot tanque inicia el pull de forma táctica.|r", icon = "Interface\\Icons\\Ability_Hunter_SniperShot", cmd = "pull" },
+        { name = "Passive", tip = "Modo Pasivo\n|cFF888888Detiene el combate de los bots inmediatamente.|r", icon = "Interface\\Icons\\Spell_Holy_Peace", cmd = "passive" },
+        { name = "Recruit", tip = "Reclutar Bot\n|cFF888888Click izquierdo: Menú de roles.\nClick derecho: Reclutar Tanque.|r", icon = "Interface\\Icons\\Achievement_GuildPerk_MassResurrection", isRecruit = true },
+        { name = "Regear", tip = "Reequipar (Regear)\n|cFF888888Actualiza y optimiza el equipo del bot seleccionado.|r", icon = "Interface\\Icons\\INV_Hammer_20", cmd = "regear" },
+    }
+
+    local btnSize = 28
+    local startX = 6
+    for i, def in ipairs(btnDefs) do
+        local btn = CreateFrame("Button", "PJ_TacticalBtn_" .. def.name, tacticalBar)
+        btn:SetSize(btnSize, btnSize)
+        btn:SetPoint("BOTTOMLEFT", tacticalBar, "BOTTOMLEFT", startX + (i - 1) * (btnSize + 6), 5)
+
+        local tex = btn:CreateTexture(nil, "BACKGROUND")
+        tex:SetAllPoints()
+        tex:SetTexture(def.icon)
+        btn.icon = tex
+
+        local highlight = btn:CreateTexture(nil, "HIGHLIGHT")
+        highlight:SetAllPoints()
+        highlight:SetTexture("Interface\\Buttons\\ButtonHilight-Square")
+        highlight:SetBlendMode("ADD")
+
+        btn:SetScript("OnEnter", function(self)
+            GameTooltip:SetOwner(self, "ANCHOR_TOP")
+            GameTooltip:ClearLines()
+            GameTooltip:AddLine("|cFFD4AF37" .. def.name .. "|r")
+            GameTooltip:AddLine(def.tip, 1, 1, 1, true)
+            GameTooltip:Show()
+        end)
+        btn:SetScript("OnLeave", function()
+            GameTooltip:Hide()
+        end)
+
+        if def.isRecruit then
+            btn:RegisterForClicks("LeftButtonUp", "RightButtonUp")
+            btn:SetScript("OnClick", function(self, button)
+                if button == "RightButton" then
+                    C.SendCommand("recruit_tank")
+                else
+                    C.ToggleRecruitMenu(self)
+                end
+            end)
+        else
+            btn:SetScript("OnClick", function()
+                C.SendCommand(def.cmd)
+            end)
+        end
+    end
+
+    local closeBtn = CreateFrame("Button", nil, tacticalBar, "UIPanelCloseButton")
+    closeBtn:SetSize(20, 20)
+    closeBtn:SetPoint("TOPRIGHT", tacticalBar, "TOPRIGHT", 2, 2)
+    closeBtn:SetScript("OnClick", function()
+        tacticalBar:Hide()
+        if ProjectJaina_Companion_DB then ProjectJaina_Companion_DB.BarHidden = true end
+    end)
+
+    if ProjectJaina_Companion_DB and ProjectJaina_Companion_DB.TacticalPos then
+        local pos = ProjectJaina_Companion_DB.TacticalPos
+        tacticalBar:ClearAllPoints()
+        tacticalBar:SetPoint(pos[1], UIParent, pos[2], pos[3], pos[4])
+    end
+
+    if ProjectJaina_Companion_DB and ProjectJaina_Companion_DB.BarHidden then
+        tacticalBar:Hide()
+    else
+        tacticalBar:Show()
+    end
+end
+
+SLASH_PROJECTJAINA_BOTBAR1 = "/jainabot"
+SLASH_PROJECTJAINA_BOTBAR2 = "/jainacompanion"
+SLASH_PROJECTJAINA_BOTBAR3 = "/botbar"
+SlashCmdList["PROJECTJAINA_BOTBAR"] = function(msg)
+    local cmd = (msg or ""):lower():match("^%s*(%S+)")
+    if cmd == "follow" or cmd == "stay" or cmd == "attack" or cmd == "pull" or cmd == "passive" or cmd == "regear" then
+        C.SendCommand(cmd)
+    elseif cmd == "recruit" then
+        local sub = (msg or ""):lower():match("recruit%s+(%S+)")
+        if sub == "tank" then C.SendCommand("recruit_tank")
+        elseif sub == "healer" or sub == "heal" then C.SendCommand("recruit_healer")
+        elseif sub == "dps" then C.SendCommand("recruit_dps")
+        else C.ToggleRecruitMenu(tacticalBar or UIParent)
+        end
+    else
+        C.ToggleTacticalBar()
+    end
+end
+

@@ -1,9 +1,10 @@
 ## Interface: 30300
 ## Title: |cFFD4AF37Project Jaina|r - Companion
-## Notes: Hub social ligero del ecosistema Project Jaina. Muestra addons activos en el grupo, badge de modo de juego, anuncios de BattlePass y utilidades de comercio e invitación cross-faction sin taint.
+## Notes: Hub social ligero y barra de control táctico de Playerbots del ecosistema Project Jaina. Incluye gestión de roles, formaciones, auto-pull y sincronización de grupo.
 ## Author: DarckRovert (Ingame: Elnazzareno) & Antigravity (Mythos 5)
-## Version: 1.0.3
+## Version: 2.0.0
 ## SavedVariables: ProjectJaina_Companion_DB
 
+Bindings.xml
 Config.lua
 Core.lua
