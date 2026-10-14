@@ -10,8 +10,8 @@ Ficha técnica oficial de registro en la infraestructura multi-addon de **Projec
 |---|---|
 | **Nombre Técnico** | `ProjectJaina_Companion` |
 | **Carpeta Local** | `ProjectJaina_Companion` |
-| **Versión Actual** | `1.0.3` |
-| **Clasificación** | Cliente / Social |
+| **Versión Actual** | `2.0.0` |
+| **Clasificación** | Cliente / Social & Control Táctico de Bots |
 | **Licencia Formal** | MIT |
 | **Repositorio GitHub** | [ProjectJaina_Companion](https://github.com/DarckRovert/ProjectJaina_Companion) |
 | **Entorno de Juego** | World of Warcraft 3.3.5a (Build 12340) / JainaCore |

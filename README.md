@@ -1,6 +1,6 @@
-# ❄️ Project Jaina — Companion (v1.0.3)
+# ❄️ Project Jaina — Companion (v2.0.0)
 
-**Versión:** 1.0.3 (WotLK Hardened Edition)  
+**Versión:** 2.0.0 (WotLK Hardened Edition — Tactical Suite)  
 **Autor:** DarckRovert (Ingame: `Elnazzareno`) & Antigravity (Mythos 5)  
 **Servidor Destino:** [Project Jaina](https://darckrovert.github.io/ProjectJaina_Web/) — Project Jaina  
 **Entorno de Ejecución:** World of Warcraft 3.3.5a (Build 12340) | Lua 5.1 puro  
@@ -10,7 +10,7 @@
 
 [![WoW Client](https://img.shields.io/badge/WoW%20Client-3.3.5a%20(Build%2012340)-blue.svg)](https://darckrovert.github.io/ProjectJaina_Web/)
 [![Servidor](https://img.shields.io/badge/Servidor-Project%20Jaina-00ccff.svg)](https://darckrovert.github.io/ProjectJaina_Web/)
-[![Version](https://img.shields.io/badge/version-1.0.3-brightgreen.svg)](https://github.com/DarckRovert/ProjectJaina_Companion/releases)
+[![Version](https://img.shields.io/badge/version-2.0.0-brightgreen.svg)](https://github.com/DarckRovert/ProjectJaina_Companion/releases)
 [![Build Status](https://img.shields.io/badge/CI-Passing-success.svg)](https://github.com/DarckRovert/ProjectJaina_Companion/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
