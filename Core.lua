@@ -760,27 +760,29 @@ _G["BINDING_NAME_PROJECTJAINA_COMPANION_TOGGLEBAR"] = "Alternar Barra Táctica d
 
 function C.SendCommand(action, arg)
     if not action then return end
+    local groupChannel = GetGroupChannel() or "PARTY"
+
     if action == "follow" then
-        SendChatMessage(".bot follow", "SAY")
+        SendChatMessage("follow", groupChannel)
     elseif action == "stay" then
-        SendChatMessage(".bot stay", "SAY")
+        SendChatMessage("stay", groupChannel)
     elseif action == "attack" then
-        SendChatMessage(".bot attack", "SAY")
+        SendChatMessage("attack", groupChannel)
     elseif action == "pull" then
-        SendChatMessage(".bot auto pull", "SAY")
+        SendChatMessage("pull", groupChannel)
     elseif action == "passive" then
-        SendChatMessage(".bot passive", "SAY")
+        SendChatMessage("flee", groupChannel)
     elseif action == "recruit_tank" then
-        SendChatMessage(".bot role recruit tank", "SAY")
+        SendChatMessage(".bot role tank", "SAY")
     elseif action == "recruit_healer" then
-        SendChatMessage(".bot role recruit healer", "SAY")
+        SendChatMessage(".bot role heal", "SAY")
     elseif action == "recruit_dps" then
-        SendChatMessage(".bot role recruit dps", "SAY")
+        SendChatMessage(".bot role dps", "SAY")
     elseif action == "regear" then
         SendChatMessage(".bot regear", "SAY")
     elseif action == "raid" then
-        local size = arg or "5man"
-        SendChatMessage(".bot raid recruit " .. size, "SAY")
+        local size = arg or "5"
+        SendChatMessage(".bot raid " .. tostring(size), "SAY")
     end
 end
 
@@ -818,9 +820,9 @@ function C.ToggleRecruitMenu(anchorFrame)
             { text = "|cFF0070DETanque (Tank)|r", cmd = "recruit_tank" },
             { text = "|cFF00FF00Sanador (Healer)|r", cmd = "recruit_healer" },
             { text = "|cFFFF2020DPS|r", cmd = "recruit_dps" },
-            { text = "|cFFFFD100Grupo 5 (5-man)|r", cmd = "raid", arg = "5man" },
-            { text = "|cFFFF8000Banda 10 (10-man)|r", cmd = "raid", arg = "10man" },
-            { text = "|cFF9932CCBanda 25 (25-man)|r", cmd = "raid", arg = "25man" },
+            { text = "|cFFFFD100Grupo 5 (5-man)|r", cmd = "raid", arg = 5 },
+            { text = "|cFFFF8000Banda 10 (10-man)|r", cmd = "raid", arg = 10 },
+            { text = "|cFF9932CCBanda 25 (25-man)|r", cmd = "raid", arg = 25 },
         }
 
         for i, item in ipairs(items) do
