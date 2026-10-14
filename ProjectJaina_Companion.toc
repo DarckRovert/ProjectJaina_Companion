@@ -5,6 +5,5 @@
 ## Version: 2.0.0
 ## SavedVariables: ProjectJaina_Companion_DB
 
-Bindings.xml
 Config.lua
 Core.lua
