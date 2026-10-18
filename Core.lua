@@ -377,6 +377,10 @@ local function ExecuteOrWarn(slashKey, fallbackKey, moduleName)
         SlashCmdList[slashKey]("")
     elseif fallbackKey and SlashCmdList and SlashCmdList[fallbackKey] then
         SlashCmdList[fallbackKey]("")
+    elseif moduleName == "Tienda Dalaran" and ProjectJaina_Store and ProjectJaina_Store.Toggle then
+        ProjectJaina_Store:Toggle()
+    elseif moduleName == "Tienda Visual" and WowPeruVisual_ToggleUI then
+        WowPeruVisual_ToggleUI()
     elseif moduleName == "MultiBot" and MultiBot and MultiBot.ToggleMainUIVisibility then
         MultiBot.ToggleMainUIVisibility()
     elseif moduleName == "Chatter LLM" and Chatter and Chatter.Toggle then
@@ -413,8 +417,11 @@ local function OpenHubMenu(anchor)
         { text = "|cFFD4AF37Barra Táctica de Bots|r (/botbar)", notCheckable = true, func = function()
             if C.ToggleTacticalBar then C.ToggleTacticalBar() end
         end },
-        { text = "|cFFFFD100Tienda de Visuales|r (/tienda)", notCheckable = true, func = function()
-            ExecuteOrWarn("WOWPERU_VISUAL", nil, "Tienda Visual")
+        { text = "|cFFFFD100Tesorería de Dalaran|r (/tienda)", notCheckable = true, func = function()
+            ExecuteOrWarn("PROJECTJAINA_STORE", "TIENDA", "Tienda Dalaran")
+        end },
+        { text = "|cFFFFD100Alas y Auras Místicas|r (/alas)", notCheckable = true, func = function()
+            ExecuteOrWarn("WOWPERU_VISUAL", "ALAS", "Tienda Visual")
         end },
         { text = "|cFFFFD100LoreHUD (Subtítulos 3D)|r (/lorehud)", notCheckable = true, func = function()
             ExecuteOrWarn("LOREHUD", nil, "LoreHUD")
