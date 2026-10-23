@@ -203,10 +203,14 @@ local function BroadcastStatus()
     if #payload > 200 then return end  -- guardia estricta de 255 bytes
 
     if RegisterAddonMessagePrefix then
-        RegisterAddonMessagePrefix(C.Config.AddonPrefix)
+        RegisterAddonMessagePrefix(C.Config.AddonPrefix or "JAINA_COMP")
+        RegisterAddonMessagePrefix(C.Config.LegacyPrefix or "WP_COMP")
     end
 
-    SendAddonMessage(C.Config.AddonPrefix, payload, targetChannel)
+    SendAddonMessage(C.Config.AddonPrefix or "JAINA_COMP", payload, targetChannel)
+    if C.Config.LegacyPrefix then
+        SendAddonMessage(C.Config.LegacyPrefix, payload, targetChannel)
+    end
 end
 
 -- ================================================================
@@ -223,7 +227,7 @@ local function ParseAddonMessage(sender, message)
     if baseSender == myName or sender == myName then return end
 
     -- 1. Solicitud de escaneo P2P proveniente de un compañero de grupo/banda
-    if message == "WP_SCAN_REQ" then
+    if message == "JAINA_SCAN_REQ" or message == "WP_SCAN_REQ" then
         -- Responder con jitter defensivo aleatorio para evitar colisiones en bandas de 25/40
         responseJitterTimer = 0
         responseJitterTarget = 0.05 + (math.random(1, 30) / 100)
@@ -232,8 +236,8 @@ local function ParseAddonMessage(sender, message)
     end
 
     -- 2. Recepción de estado de un compañero
-    -- Formato esperado: "WP_ADDONS:<addon1>,<addon2>|<MODE>"
-    local addonList, mode = message:match("^WP_ADDONS:([^|]*)|(.+)$")
+    -- Formato esperado: "JAINA_ADDONS:<addon1>,<addon2>|<MODE>" o "WP_ADDONS:..."
+    local addonList, mode = message:match("^[A-Z_]+_ADDONS:([^|]*)|(.+)$")
     if not addonList then return end
 
     local addons = {}
@@ -256,14 +260,18 @@ local function RequestGroupScan()
     end
 
     if RegisterAddonMessagePrefix then
-        RegisterAddonMessagePrefix(C.Config.AddonPrefix)
+        RegisterAddonMessagePrefix(C.Config.AddonPrefix or "JAINA_COMP")
+        RegisterAddonMessagePrefix(C.Config.LegacyPrefix or "WP_COMP")
     end
 
     -- Primero transmitimos nuestro estado
     BroadcastStatus()
 
     -- Solicitamos a todos los clientes del grupo responder con el suyo
-    SendAddonMessage(C.Config.AddonPrefix, "WP_SCAN_REQ", targetChannel)
+    SendAddonMessage(C.Config.AddonPrefix or "JAINA_COMP", "JAINA_SCAN_REQ", targetChannel)
+    if C.Config.LegacyPrefix then
+        SendAddonMessage(C.Config.LegacyPrefix, "WP_SCAN_REQ", targetChannel)
+    end
     CPrint("Escaneando addons del grupo (solicitud P2P enviada)...")
 end
 
@@ -397,16 +405,16 @@ local function OpenHubMenu(anchor)
     local menuList = {
         { text = headerTitle, isTitle = true, notCheckable = true },
         { text = "|cFFFFD100Pase de Batalla|r (/bp)", notCheckable = true, func = function()
-            ExecuteOrWarn("WOWPERUBP", "BP", "BattlePass")
+            ExecuteOrWarn("JAINA_BP", "WOWPERUBP", "BattlePass")
         end },
         { text = "|cFFFFD100Guardarropa (Transfiguración)|r (/armario)", notCheckable = true, func = function()
-            ExecuteOrWarn("WP_WARDROBEV2", "ARMARIO", "Guardarropa")
+            ExecuteOrWarn("JAINA_WARDROBE", "WP_WARDROBEV2", "Guardarropa")
         end },
         { text = "|cFFFFD100Modos de Juego|r (/modos)", notCheckable = true, func = function()
-            ExecuteOrWarn("WOWPERU_MODES", "MODOS", "Modos de Juego")
+            ExecuteOrWarn("JAINA_MODES", "WOWPERU_MODES", "Modos de Juego")
         end },
         { text = "|cFFFFD100Suite Gráfica HD|r (/graficos)", notCheckable = true, func = function()
-            ExecuteOrWarn("WOWPERU_GRAPHICS", nil, "Graficos HD")
+            ExecuteOrWarn("JAINA_GRAPHICS", "WOWPERU_GRAPHICS", "Graficos HD")
         end },
         { text = "|cFF00FFCCGestor de Bots con IA|r (/bots)", notCheckable = true, func = function()
             ExecuteOrWarn("CHATTER", "LLMC", "Chatter LLM")
@@ -421,7 +429,7 @@ local function OpenHubMenu(anchor)
             ExecuteOrWarn("PROJECTJAINA_STORE", "TIENDA", "Tienda Dalaran")
         end },
         { text = "|cFFFFD100Alas y Auras Místicas|r (/alas)", notCheckable = true, func = function()
-            ExecuteOrWarn("WOWPERU_VISUAL", "ALAS", "Tienda Visual")
+            ExecuteOrWarn("JAINA_VISUAL", "WOWPERU_VISUAL", "Tienda Visual")
         end },
         { text = "|cFFFFD100LoreHUD (Subtítulos 3D)|r (/lorehud)", notCheckable = true, func = function()
             ExecuteOrWarn("LOREHUD", nil, "LoreHUD")
@@ -697,12 +705,12 @@ eventFrame:SetScript("OnEvent", function(self, event, ...)
 
     elseif event == "CHAT_MSG_ADDON" then
         local prefix, message, channel, sender = ...
-        if prefix == C.Config.AddonPrefix then
+        if prefix == C.Config.AddonPrefix or prefix == (C.Config.LegacyPrefix or "WP_COMP") then
             ParseAddonMessage(sender, message)
         end
 
         -- Escuchar confirmación autoritativa de modo de juego para actualizar grupo de inmediato
-        if prefix == "WP_GAMEMODE" and message then
+        if (prefix == "JAINA_GAMEMODE" or prefix == "WP_GAMEMODE") and message then
             local mode = message:match("^STATUS:(.+)$") or message:match("^ACK:(.+)$")
             if mode then
                 if ProjectJaina_GameModes_CharDB then
@@ -719,7 +727,7 @@ eventFrame:SetScript("OnEvent", function(self, event, ...)
         end
 
         -- Escuchar paquetes de BattlePass para sincronizar inmediato tras XP real
-        if prefix == "WP_BP" and message then
+        if (prefix == "JAINA_BP" or prefix == "WP_BP") and message then
             local opcode = message:match("^([^:]+)")
             if opcode == "BP_RES_XP" then
                 -- Acelerar ticker para comprobar inmediatamente tras procesar el levelup

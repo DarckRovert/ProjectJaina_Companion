@@ -28,9 +28,10 @@ C.Config = {
         { name = "ProjectJaina_DragonflightUI", label = "DragonflightUI", color = "FFE040FB" },
         { name = "ProjectJaina_Graphics",       label = "Graficos HD",    color = "FF80D8FF" },
         { name = "Chatter_Companion",           label = "Chatter LLM",    color = "FF00FFCC" },
-        { name = "WaniGM",                      label = "WaniGM Tools",   color = "FF00CCFF" },
+        { name = "ProjectJaina_GMGenie",        label = "JainaGM Staff",  color = "FF00CCFF" },
     },
 
-    -- Prefijo de red
-    AddonPrefix = "WP_COMP",
+    -- Prefijo de red soberano
+    AddonPrefix = "JAINA_COMP",
+    LegacyPrefix = "WP_COMP",
 }
