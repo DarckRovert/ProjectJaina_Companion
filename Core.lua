@@ -454,6 +454,8 @@ SLASH_WPCOMP1 = "/companion"
 SLASH_WPCOMP2 = "/wpcomp"
 SLASH_WPCOMP3 = "/hub"
 SLASH_WPCOMP4 = "/menu"
+SLASH_JAINA_COMP1 = "/jainacomp"
+SLASH_JAINA_COMP2 = "/comp"
 SlashCmdList["WPCOMP"] = function(msg)
     local cmd, arg = (msg or ""):lower():match("^(%S+)%s*(%S*)$")
     cmd = cmd or ""
@@ -487,6 +489,7 @@ SlashCmdList["WPCOMP"] = function(msg)
         CPrint("Comandos Cross-Faction: /comerciar y /invitar [Nombre]")
     end
 end
+SlashCmdList["JAINA_COMP"] = SlashCmdList["WPCOMP"]
 
 -- ================================================================
 -- UTILIDADES CROSS-FACTION (Alianza <-> Horda)
