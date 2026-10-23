@@ -1,6 +1,6 @@
 # 📦 Guía de Instalación — ProjectJaina_Companion
 
-Instrucciones oficiales para instalar y verificar **ProjectJaina_Companion** en el cliente **World of Warcraft 3.3.5a (Build 12340)** del servidor **Project Jaina - Project Jaina**.
+Instrucciones oficiales para instalar y verificar **ProjectJaina_Companion** en el cliente **World of Warcraft 3.3.5a (Build 12340)** del servidor **Project Jaina**.
 
 ---
 

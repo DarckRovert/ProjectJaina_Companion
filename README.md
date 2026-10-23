@@ -117,7 +117,7 @@ ProjectJaina_Companion/
 
 - **Cliente WoW:** 3.3.5a (Build 12340).
 - **Motor Lua:** Lua 5.1 puro (sin sintaxis ni APIs de Cataclysm/MoP/Retail).
-- **Servidor:** JainaCore con soporte para Project Jaina - Project Jaina.
+- **Servidor:** JainaCore con soporte para Project Jaina.
 - **Addons Opcionales (Sinérgicos):**
   - [ProjectJaina_BattlePass](https://github.com/DarckRovert/ProjectJaina_BattlePass)
   - [ProjectJaina_GameModes](https://github.com/DarckRovert/ProjectJaina_GameModes)

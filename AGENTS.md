@@ -1,7 +1,7 @@
 # 🤖 Reglas de Contexto y Memoria para Agentes de IA — ProjectJaina_Companion
 
 > **Documento Maestro de Arquitectura y Memoria Operativa**  
-> **Ámbito:** `d:\Project Jaina\Client\Interface\AddOns\ProjectJaina_Companion\`  
+> **Ámbito:** `Client\Interface\AddOns\ProjectJaina_Companion\`  
 > **Líder del Proyecto:** DarckRovert (Ingame: `Elnazzareno`)  
 > **Servidor Destino:** [Project Jaina](https://darckrovert.github.io/ProjectJaina_Web/) — Project Jaina  
 > **Entorno de Ejecución:** World of Warcraft 3.3.5a (Build 12340) | Lua 5.1 puro  
@@ -17,7 +17,7 @@ Este addon convive con los **5 sistemas oficiales** de Project Jaina:
 | :--- | :--- | :--- |
 | **`ProjectJaina_Companion`** | `WP_COMP` | Hub social meta-ligero. Telemetría de grupo, badges de modo y anuncios de BattlePass. |
 | **`ProjectJaina_BattlePass`** | `WP_BP` | Pase de Batalla Estacional (50 niveles). |
-| **`ProjectJaina_GameModes`** | `WP_GAMEMODE` | Selector de modos de juego (Normal, Hardcore, Ironman). |
+| **`ProjectJaina_GameModes`** | `JAINA_GAMEMODE` (compat: `WP_GAMEMODE`) | Selector cinemático de modos (Normal, Hardcore, Ironman, Reto Andino x1). |
 | **`ProjectJaina_RaidSuite`** | `WP_BP` (EcoBridge) / `Jaina` | Suite táctica de combate, loot y raids. |
 | **`ProjectJaina_VisualShop`** | `WP_VISUAL` | Catálogo visual de alas, auras y títulos sincronizado. |
 
