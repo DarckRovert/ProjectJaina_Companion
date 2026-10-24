@@ -4,6 +4,14 @@ Todos los cambios notables de este proyecto están documentados en este archivo 
 
 ---
 
+## [2.2.0] — 2026-10-24
+### Telemetría de Clanes de Bots y Venganza de Hermandad ("Ojo por Ojo")
+- **Telemetría de Vendettas (`/pjc vendettas` / `/vendetta`):** Incorporada consulta de estado de cacerías de sangre de cofradías de bots contra el jugador tras matar a un bot en PvP de mundo abierto.
+- **Soporte de Atajos Oficiales:** Añadidos `/companion` y `/vendetta` a la lista de comandos slash nativos.
+- **Documentación de Cofradías Autónomas:** Visualización de las 6 hermandades de bots (<La Cofradía de la Espada Negra>, <Los Centinelas de la Aurora>, <Pacto de Sangre de Kalimdor>, <El Sindicato de Trinquete>, <Custodios de los Arcanos>, <Hijos del Invierno>) y sus reglas militares de cierre (1 muerte o 15 minutos).
+
+---
+
 ## [2.1.0] — 2026-10-24
 ### Foco Táctico de Escuadrón, Recuperación de Wipe y Expansión de Barra Táctica
 - **Foco Táctico de Escuadrón (`+focus,attack` / Calavera):** Añadido botón y comando `/pjc focus` / `/botbar focus` que marca el objetivo actual con calavera (Icono de Banda 8) y ordena a todos los bots concentrar fuego y asistencia táctica.
