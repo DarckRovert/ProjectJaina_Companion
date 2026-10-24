@@ -2,6 +2,8 @@
     <Binding name="PROJECTJAINA_COMPANION_FOLLOW" header="PROJECTJAINA_COMPANION">ProjectJaina_Companion.SendCommand("follow")</Binding>
     <Binding name="PROJECTJAINA_COMPANION_STAY">ProjectJaina_Companion.SendCommand("stay")</Binding>
     <Binding name="PROJECTJAINA_COMPANION_ATTACK">ProjectJaina_Companion.SendCommand("attack")</Binding>
+    <Binding name="PROJECTJAINA_COMPANION_FOCUS">ProjectJaina_Companion.SendCommand("focus")</Binding>
+    <Binding name="PROJECTJAINA_COMPANION_REVIVE">ProjectJaina_Companion.SendCommand("revive")</Binding>
     <Binding name="PROJECTJAINA_COMPANION_PULL">ProjectJaina_Companion.SendCommand("pull")</Binding>
     <Binding name="PROJECTJAINA_COMPANION_PASSIVE">ProjectJaina_Companion.SendCommand("passive")</Binding>
     <Binding name="PROJECTJAINA_COMPANION_RECRUIT_TANK">ProjectJaina_Companion.SendCommand("recruit_tank")</Binding>

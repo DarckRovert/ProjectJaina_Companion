@@ -4,6 +4,16 @@ Todos los cambios notables de este proyecto están documentados en este archivo 
 
 ---
 
+## [2.1.0] — 2026-10-24
+### Foco Táctico de Escuadrón, Recuperación de Wipe y Expansión de Barra Táctica
+- **Foco Táctico de Escuadrón (`+focus,attack` / Calavera):** Añadido botón y comando `/pjc focus` / `/botbar focus` que marca el objetivo actual con calavera (Icono de Banda 8) y ordena a todos los bots concentrar fuego y asistencia táctica.
+- **Recuperación y Sincronización de Wipe en Mazmorras (`.rdf revive`):** Añadido botón y atajos `/pjc revive` / `/pjc sync` para reanimar y teletransportar al escuadrón caído o desfasado directo a la posición del líder.
+- **Expansión de Barra Táctica:** Rediseño responsivo de 7 a 9 botones (318px de ancho) con tooltips descriptivos de alta fidelidad.
+- **Keybindings Nativos (`Bindings.xml`):** Registrados atajos de teclado oficiales en la interfaz de Blizzard para `Bots: Concentrar Fuego` y `Bots: Reanimar / Sincronizar Escuadrón`.
+- **Soporte de Atajo Rápido:** Incorporado `/pjc` a la lista oficial de comandos de consola del AddOn.
+
+---
+
 ## [2.0.1] — 2026-10-24
 ### Corrección de Protocolo P2P y Registro de Ecosistema
 - **Registro de Ecosistema (`Config.lua`):** Incorporado `ProjectJaina_Store` a `C.Config.EcosystemAddons` con clave `store`, nombre `ProjectJaina_Store` y label `Tienda`, garantizando su sincronización y broadcast entre compañeros.

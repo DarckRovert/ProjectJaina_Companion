@@ -464,12 +464,17 @@ SLASH_WPCOMP3 = "/hub"
 SLASH_WPCOMP4 = "/menu"
 SLASH_JAINA_COMP1 = "/jainacomp"
 SLASH_JAINA_COMP2 = "/comp"
+SLASH_WPCOMP5 = "/pjc"
 SlashCmdList["WPCOMP"] = function(msg)
     local cmd, arg = (msg or ""):lower():match("^(%S+)%s*(%S*)$")
     cmd = cmd or ""
 
     if cmd == "menu" or cmd == "hub" or cmd == "" then
         OpenHubMenu("cursor")
+    elseif cmd == "focus" then
+        C.SendCommand("focus")
+    elseif cmd == "revive" or cmd == "sync" then
+        C.SendCommand("revive")
     elseif cmd == "scan" then
         RequestGroupScan()
     elseif cmd == "status" then
@@ -776,6 +781,8 @@ _G["BINDING_HEADER_PROJECTJAINA_COMPANION"] = "|cFFD4AF37Project Jaina|r - Contr
 _G["BINDING_NAME_PROJECTJAINA_COMPANION_FOLLOW"] = "Bots: Seguir"
 _G["BINDING_NAME_PROJECTJAINA_COMPANION_STAY"] = "Bots: Quedarse / Alto"
 _G["BINDING_NAME_PROJECTJAINA_COMPANION_ATTACK"] = "Bots: Atacar objetivo"
+_G["BINDING_NAME_PROJECTJAINA_COMPANION_FOCUS"] = "Bots: Concentrar Fuego (Focus Fire / Calavera)"
+_G["BINDING_NAME_PROJECTJAINA_COMPANION_REVIVE"] = "Bots: Reanimar / Sincronizar Escuadrón (.rdf revive)"
 _G["BINDING_NAME_PROJECTJAINA_COMPANION_PULL"] = "Bots: Auto-Pull (Tanque)"
 _G["BINDING_NAME_PROJECTJAINA_COMPANION_PASSIVE"] = "Bots: Modo Pasivo"
 _G["BINDING_NAME_PROJECTJAINA_COMPANION_RECRUIT_TANK"] = "Reclutar Bot: Tanque"
@@ -794,6 +801,18 @@ function C.SendCommand(action, arg)
         SendChatMessage("stay", groupChannel)
     elseif action == "attack" then
         SendChatMessage("attack", groupChannel)
+    elseif action == "focus" then
+        if UnitExists("target") and UnitCanAttack("player", "target") then
+            pcall(function() SetRaidTarget("target", 8) end)
+            SendChatMessage("+focus,attack", groupChannel)
+            CPrint("|cFF00FFCCFoco Táctico activado:|r Escuadrón concentrando fuego en |cFFFFD100" .. (UnitName("target") or "Objetivo") .. "|r.")
+        else
+            SendChatMessage("+focus", groupChannel)
+            CPrint("|cFF00FFCCEstrategia de Foco Táctico enviada al escuadrón.|r")
+        end
+    elseif action == "revive" or action == "sync" then
+        SendChatMessage(".rdf revive", "SAY")
+        CPrint("|cFF00FFCCSincronización de Escuadrón:|r Reanimando y teletransportando bots caídos a tu posición...")
     elseif action == "pull" then
         SendChatMessage("pull", groupChannel)
     elseif action == "passive" then
@@ -885,7 +904,7 @@ function C.CreateTacticalBar()
     if tacticalBar then return end
 
     tacticalBar = CreateFrame("Frame", "ProjectJaina_TacticalBar", UIParent)
-    tacticalBar:SetSize(250, 46)
+    tacticalBar:SetSize(318, 46)
     tacticalBar:SetPoint("CENTER", UIParent, "CENTER", 0, -220)
     tacticalBar:SetMovable(true)
     tacticalBar:EnableMouse(true)
@@ -916,6 +935,8 @@ function C.CreateTacticalBar()
         { name = "Follow", tip = "Seguir (Follow)\n|cFF888888Ordena a los bots seguirte de cerca.|r", icon = "Interface\\Icons\\Ability_Tracking", cmd = "follow" },
         { name = "Stay", tip = "Alto / Esperar (Stay)\n|cFF888888Mantiene a los bots en su posición actual.|r", icon = "Interface\\Icons\\Spell_Nature_StoneClawTotem", cmd = "stay" },
         { name = "Attack", tip = "Atacar Objetivo (Attack)\n|cFF888888Ordena a los bots atacar a tu objetivo actual.|r", icon = "Interface\\Icons\\Ability_DualWield", cmd = "attack" },
+        { name = "Focus", tip = "Concentrar Fuego (Focus Fire)\n|cFF888888Marca con Calavera y ordena a todos los bots concentrar fuego en tu objetivo actual.|r", icon = "Interface\\TargetingFrame\\UI-RaidTargetingIcon_8", cmd = "focus" },
+        { name = "Revive", tip = "Reanimar Escuadrón (Wipe Recovery)\n|cFF888888Reanima y teletransporta a todos los bots caídos o rezagados directo a tu posición (.rdf revive).|r", icon = "Interface\\Icons\\Spell_Holy_Resurrection", cmd = "revive" },
         { name = "Pull", tip = "Auto-Pull del Tanque\n|cFF888888El bot tanque inicia el pull de forma táctica.|r", icon = "Interface\\Icons\\Ability_Hunter_SniperShot", cmd = "pull" },
         { name = "Passive", tip = "Modo Pasivo\n|cFF888888Detiene el combate de los bots inmediatamente.|r", icon = "Interface\\Icons\\Spell_Holy_Peace", cmd = "passive" },
         { name = "Recruit", tip = "Reclutar Bot\n|cFF888888Click izquierdo: Menú de roles.\nClick derecho: Reclutar Tanque.|r", icon = "Interface\\Icons\\Achievement_GuildPerk_MassResurrection", isRecruit = true },
@@ -992,7 +1013,7 @@ SLASH_PROJECTJAINA_BOTBAR2 = "/jainacompanion"
 SLASH_PROJECTJAINA_BOTBAR3 = "/botbar"
 SlashCmdList["PROJECTJAINA_BOTBAR"] = function(msg)
     local cmd = (msg or ""):lower():match("^%s*(%S+)")
-    if cmd == "follow" or cmd == "stay" or cmd == "attack" or cmd == "pull" or cmd == "passive" or cmd == "regear" then
+    if cmd == "follow" or cmd == "stay" or cmd == "attack" or cmd == "focus" or cmd == "revive" or cmd == "sync" or cmd == "pull" or cmd == "passive" or cmd == "regear" then
         C.SendCommand(cmd)
     elseif cmd == "recruit" then
         local sub = (msg or ""):lower():match("recruit%s+(%S+)")
