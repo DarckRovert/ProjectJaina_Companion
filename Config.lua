@@ -21,6 +21,7 @@ C.Config = {
         { name = "ProjectJaina_GameModes",      label = "GameModes",      color = "FF4FC3F7" },
         { name = "ProjectJaina_MultiBot",       label = "MultiBot",       color = "FF00FFCC" },
         { name = "ProjectJaina_RaidSuite",      label = "RaidSuite",      color = "FF81C784" },
+        { name = "ProjectJaina_Store",          label = "Tienda",         color = "FFFFD100" },
         { name = "ProjectJaina_VisualShop",     label = "VisualShop",     color = "FFCE93D8" },
         { name = "ProjectJaina_Talented",       label = "Talented",       color = "FFF57C00" },
         { name = "ProjectJaina_Wardrobe",       label = "Wardrobe",       color = "FFE6C280" },

@@ -102,6 +102,12 @@ local function GetLocalGameMode()
                 ProjectJaina_GameModes_CharDB.selectedMode = "IRONMAN"
             end
             return "IRONMAN"
+        elseif lower:find("die and rise") or lower:find("dierise") then
+            if ProjectJaina_GameModes_CharDB then
+                ProjectJaina_GameModes_CharDB.hasSelectedMode = true
+                ProjectJaina_GameModes_CharDB.selectedMode = "DIE_AND_RISE"
+            end
+            return "DIE_AND_RISE"
         end
     end
     return "NORMAL"
@@ -316,6 +322,8 @@ local function FormatModeBadge(mode, short)
         return short and " |cFFFF3333[HC]|r" or " |cFFFF3333[HARDCORE]|r"
     elseif mode == "IRONMAN" then
         return short and " |cFFFF9900[IM]|r" or " |cFFFF9900[IRONMAN]|r"
+    elseif mode == "DIE_AND_RISE" or mode == "DIERISE" then
+        return short and " |cFFBF5FFF[D&R]|r" or " |cFFBF5FFF[DIE & RISE]|r"
     elseif mode == "SLOW_X1" or mode == "X1" then
         return short and " |cFFFFD100[X1]|r" or " |cFFFFD100[RETO X1]|r"
     end
@@ -714,7 +722,7 @@ eventFrame:SetScript("OnEvent", function(self, event, ...)
 
         -- Escuchar confirmación autoritativa de modo de juego para actualizar grupo de inmediato
         if (prefix == "JAINA_GAMEMODE" or prefix == "WP_GAMEMODE") and message then
-            local mode = message:match("^STATUS:(.+)$") or message:match("^ACK:(.+)$")
+            local mode = message:match("^STATUS:([^:]+)") or message:match("^ACK:([^:]+)")
             if mode then
                 if ProjectJaina_GameModes_CharDB then
                     if mode == "NONE" then

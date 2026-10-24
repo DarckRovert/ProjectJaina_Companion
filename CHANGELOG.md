@@ -4,6 +4,13 @@ Todos los cambios notables de este proyecto están documentados en este archivo 
 
 ---
 
+## [2.0.1] — 2026-10-24
+### Corrección de Protocolo P2P y Registro de Ecosistema
+- **Registro de Ecosistema (`Config.lua`):** Incorporado `ProjectJaina_Store` a `C.Config.EcosystemAddons` con clave `store`, nombre `ProjectJaina_Store` y label `Tienda`, garantizando su sincronización y broadcast entre compañeros.
+- **Protocolo de Red P2P (`Core.lua`):** Aislamiento estricto del analizador de paquetes `OnAddonMessage` para ignorar secuencias ajenas de formato `STATUS:NONE:1:1` de `ProjectJaina_GameModes`, previniendo colisiones de red e interpretaciones erróneas de estado.
+
+---
+
 ## [2.0.0] — 2026-10-14
 ### Barra de Control Táctico de Playerbots, Menú de Reclutamiento y Keybindings Nativos
 - **Barra Flotante Táctica:** Incorporada barra móvil con botones directos: Seguir (Follow), Alto (Stay), Atacar (Attack), Auto-Pull de Tanque (Pull), Pasivo (Passive), Reclutar Bot (Recruit) y Reequipar (Regear).
