@@ -401,6 +401,8 @@ local function ExecuteOrWarn(slashKey, fallbackKey, moduleName)
         MultiBot.ToggleMainUIVisibility()
     elseif moduleName == "Chatter LLM" and Chatter and Chatter.Toggle then
         Chatter:Toggle()
+    elseif moduleName == "Graficos HD" and ProjectJaina_Graphics and ProjectJaina_Graphics.ToggleUI then
+        ProjectJaina_Graphics:ToggleUI()
     else
         CPrint(string.format("|cFFFF4444El modulo %s no esta activo o instalado.|r", moduleName))
     end
