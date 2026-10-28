@@ -832,24 +832,17 @@ function C.SendCommand(action, arg)
             CPrint("|cFFFF3333No tienes un grupo de bots para ordenar un ataque coordinado.|r")
         end
     elseif action == "focus" then
-        if groupChannel then
-            if UnitExists("target") and UnitCanAttack("player", "target") then
-                pcall(function() SetRaidTarget("target", 8) end)
-                SendChatMessage("+focus,attack", groupChannel)
-                CPrint("|cFF00FFCCFoco Táctico activado:|r Escuadrón concentrando fuego en |cFFFFD100" .. (UnitName("target") or "Objetivo") .. "|r.")
-            else
-                SendChatMessage("+focus", groupChannel)
-                CPrint("|cFF00FFCCEstrategia de Foco Táctico enviada al escuadrón.|r")
+        if UnitExists("target") and UnitCanAttack("player", "target") then
+            -- Marca de Foco Táctico oficial: Calavera (Raid Target 8)
+            pcall(function() SetRaidTarget("target", 8) end)
+            if groupChannel then
+                SendChatMessage("attack", groupChannel)
+            elseif targetBotName then
+                SendChatMessage("attack", "WHISPER", nil, targetBotName)
             end
-        elseif targetBotName then
-            if UnitExists("target") and UnitCanAttack("player", "target") then
-                SendChatMessage("+focus,attack", "WHISPER", nil, targetBotName)
-                CPrint("|cFF00FFCCFoco individual enviado a |cFFFFD100" .. targetBotName .. "|r.")
-            else
-                SendChatMessage("+focus", "WHISPER", nil, targetBotName)
-            end
+            CPrint("|cFF00FFCCFoco Táctico (Calavera):|r Escuadrón concentrando fuego en |cFFFFD100" .. (UnitName("target") or "Objetivo") .. "|r.")
         else
-            CPrint("|cFFFF3333No tienes un grupo de bots para ordenar foco táctico.|r")
+            CPrint("|cFFFF3333Selecciona un objetivo enemigo para ordenar foco táctico.|r")
         end
     elseif action == "revive" or action == "sync" then
         SendChatMessage(".rdf revive", "SAY")
@@ -867,16 +860,26 @@ function C.SendCommand(action, arg)
     elseif action == "passive" then
         DispatchOrder("flee", "|cFF00FFCCEscuadrón en Modo Pasivo:|r Alto el fuego y repliegue.")
     elseif action == "recruit_tank" then
-        SendChatMessage(".bot role tank", "SAY")
+        SendChatMessage(".rdf tank", "SAY")
+        CPrint("|cFF00FFCCReclutamiento:|r Convocando Tanque calibrado para tu nivel y mazmorra...")
     elseif action == "recruit_healer" then
-        SendChatMessage(".bot role heal", "SAY")
+        SendChatMessage(".rdf heal", "SAY")
+        CPrint("|cFF00FFCCReclutamiento:|r Convocando Sanador calibrado para tu nivel y mazmorra...")
     elseif action == "recruit_dps" then
-        SendChatMessage(".bot role dps", "SAY")
+        SendChatMessage(".rdf dps", "SAY")
+        CPrint("|cFF00FFCCReclutamiento:|r Convocando DPS táctico para tu escuadrón...")
     elseif action == "regear" then
-        SendChatMessage(".bot regear", "SAY")
+        SendChatMessage(".playerbots regear", "SAY")
+        CPrint("|cFF00FFCCRe-alineación de Equipo:|r Actualizando equipamiento y estadísticas de los bots...")
     elseif action == "raid" then
-        local size = arg or "5"
-        SendChatMessage(".bot raid " .. tostring(size), "SAY")
+        local size = tonumber(arg) or 5
+        if size == 5 then
+            SendChatMessage(".rdf bots", "SAY")
+            CPrint("|cFF00FFCCGrupo Completo (5-man):|r Formando escuadrón de mazmorra balanceado (1T/1H/3DPS)...")
+        else
+            SendChatMessage(".playerbots raid " .. tostring(size), "SAY")
+            CPrint(string.format("|cFF00FFCCBanda (%d-man):|r Convocando formación de banda táctica...", size))
+        end
     end
 end
 

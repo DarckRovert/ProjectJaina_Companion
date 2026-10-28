@@ -30,6 +30,8 @@ C.Config = {
         { name = "ProjectJaina_Graphics",       label = "Graficos HD",    color = "FF80D8FF" },
         { name = "Chatter_Companion",           label = "Chatter LLM",    color = "FF00FFCC" },
         { name = "ProjectJaina_GMGenie",        label = "JainaGM Staff",  color = "FF00CCFF" },
+        { name = "ProjectJaina_Polyglot",       label = "Polyglot",       color = "FF00CCFF" },
+        { name = "ProjectJaina_Radio",          label = "Radio FM",       color = "FFFF8000" },
     },
 
     -- Prefijo de red soberano
