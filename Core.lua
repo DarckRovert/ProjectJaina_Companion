@@ -795,30 +795,77 @@ _G["BINDING_NAME_PROJECTJAINA_COMPANION_TOGGLEBAR"] = "Alternar Barra Táctica d
 
 function C.SendCommand(action, arg)
     if not action then return end
-    local groupChannel = GetGroupChannel() or "PARTY"
+    local groupChannel = GetGroupChannel()
+    local isFriendlyPlayer = UnitExists("target") and UnitIsPlayer("target") and UnitIsFriend("player", "target")
+    local targetBotName = isFriendlyPlayer and UnitName("target")
+
+    local function DispatchOrder(cmd, desc)
+        if targetBotName then
+            SendChatMessage(cmd, "WHISPER", nil, targetBotName)
+            CPrint("|cFF00FFCCOrden táctica a |cFFFFD100" .. targetBotName .. "|r: |cFFFFFF00" .. cmd .. "|r")
+            return
+        end
+
+        if groupChannel then
+            SendChatMessage(cmd, groupChannel)
+            if desc then CPrint(desc) end
+            return
+        end
+
+        CPrint("|cFFFF3333No estás en un grupo con bots ni tienes un bot aliado seleccionado como objetivo.|r")
+    end
 
     if action == "follow" then
-        SendChatMessage("follow", groupChannel)
+        DispatchOrder("follow", "|cFF00FFCCEscuadrón:|r Siguiendo al líder.")
     elseif action == "stay" then
-        SendChatMessage("stay", groupChannel)
+        DispatchOrder("stay", "|cFF00FFCCEscuadrón:|r Alto / Esperando en posición.")
     elseif action == "attack" then
-        SendChatMessage("attack", groupChannel)
-    elseif action == "focus" then
-        if UnitExists("target") and UnitCanAttack("player", "target") then
-            pcall(function() SetRaidTarget("target", 8) end)
-            SendChatMessage("+focus,attack", groupChannel)
-            CPrint("|cFF00FFCCFoco Táctico activado:|r Escuadrón concentrando fuego en |cFFFFD100" .. (UnitName("target") or "Objetivo") .. "|r.")
+        if groupChannel then
+            SendChatMessage("attack", groupChannel)
+            if UnitExists("target") and UnitCanAttack("player", "target") then
+                CPrint("|cFF00FFCCEscuadrón:|r Atacando a |cFFFFD100" .. (UnitName("target") or "Objetivo") .. "|r.")
+            end
+        elseif targetBotName then
+            SendChatMessage("attack", "WHISPER", nil, targetBotName)
+            CPrint("|cFF00FFCCOrden de ataque individual enviada a |cFFFFD100" .. targetBotName .. "|r.")
         else
-            SendChatMessage("+focus", groupChannel)
-            CPrint("|cFF00FFCCEstrategia de Foco Táctico enviada al escuadrón.|r")
+            CPrint("|cFFFF3333No tienes un grupo de bots para ordenar un ataque coordinado.|r")
+        end
+    elseif action == "focus" then
+        if groupChannel then
+            if UnitExists("target") and UnitCanAttack("player", "target") then
+                pcall(function() SetRaidTarget("target", 8) end)
+                SendChatMessage("+focus,attack", groupChannel)
+                CPrint("|cFF00FFCCFoco Táctico activado:|r Escuadrón concentrando fuego en |cFFFFD100" .. (UnitName("target") or "Objetivo") .. "|r.")
+            else
+                SendChatMessage("+focus", groupChannel)
+                CPrint("|cFF00FFCCEstrategia de Foco Táctico enviada al escuadrón.|r")
+            end
+        elseif targetBotName then
+            if UnitExists("target") and UnitCanAttack("player", "target") then
+                SendChatMessage("+focus,attack", "WHISPER", nil, targetBotName)
+                CPrint("|cFF00FFCCFoco individual enviado a |cFFFFD100" .. targetBotName .. "|r.")
+            else
+                SendChatMessage("+focus", "WHISPER", nil, targetBotName)
+            end
+        else
+            CPrint("|cFFFF3333No tienes un grupo de bots para ordenar foco táctico.|r")
         end
     elseif action == "revive" or action == "sync" then
         SendChatMessage(".rdf revive", "SAY")
         CPrint("|cFF00FFCCSincronización de Escuadrón:|r Reanimando y teletransportando bots caídos a tu posición...")
     elseif action == "pull" then
-        SendChatMessage("pull", groupChannel)
+        if groupChannel then
+            SendChatMessage("pull", groupChannel)
+            CPrint("|cFF00FFCCAuto-Pull activado:|r El bot tanque inicia el pull táctico.")
+        elseif targetBotName then
+            SendChatMessage("pull", "WHISPER", nil, targetBotName)
+            CPrint("|cFF00FFCCAuto-Pull individual enviado a |cFFFFD100" .. targetBotName .. "|r.")
+        else
+            CPrint("|cFFFF3333No tienes un grupo de bots para ordenar un pull táctico.|r")
+        end
     elseif action == "passive" then
-        SendChatMessage("flee", groupChannel)
+        DispatchOrder("flee", "|cFF00FFCCEscuadrón en Modo Pasivo:|r Alto el fuego y repliegue.")
     elseif action == "recruit_tank" then
         SendChatMessage(".bot role tank", "SAY")
     elseif action == "recruit_healer" then
@@ -941,7 +988,7 @@ function C.CreateTacticalBar()
         { name = "Revive", tip = "Reanimar Escuadrón (Wipe Recovery)\n|cFF888888Reanima y teletransporta a todos los bots caídos o rezagados directo a tu posición (.rdf revive).|r", icon = "Interface\\Icons\\Spell_Holy_Resurrection", cmd = "revive" },
         { name = "Pull", tip = "Auto-Pull del Tanque\n|cFF888888El bot tanque inicia el pull de forma táctica.|r", icon = "Interface\\Icons\\Ability_Hunter_SniperShot", cmd = "pull" },
         { name = "Passive", tip = "Modo Pasivo\n|cFF888888Detiene el combate de los bots inmediatamente.|r", icon = "Interface\\Icons\\Spell_Holy_Peace", cmd = "passive" },
-        { name = "Recruit", tip = "Reclutar Bot\n|cFF888888Click izquierdo: Menú de roles.\nClick derecho: Reclutar Tanque.|r", icon = "Interface\\Icons\\Achievement_GuildPerk_MassResurrection", isRecruit = true },
+        { name = "Recruit", tip = "Reclutar Bot\n|cFF888888Click izquierdo: Menú de roles.\nClick derecho: Reclutar Tanque.|r", icon = "Interface\\Icons\\Achievement_Reputation_01", isRecruit = true },
         { name = "Regear", tip = "Reequipar (Regear)\n|cFF888888Actualiza y optimiza el equipo del bot seleccionado.|r", icon = "Interface\\Icons\\INV_Hammer_20", cmd = "regear" },
     }
 
@@ -1003,10 +1050,20 @@ function C.CreateTacticalBar()
         tacticalBar:SetPoint(pos[1], UIParent, pos[2], pos[3], pos[4])
     end
 
-    if ProjectJaina_Companion_DB and ProjectJaina_Companion_DB.BarHidden then
-        tacticalBar:Hide()
+    if ProjectJaina_Companion_DB and ProjectJaina_Companion_DB.BarHidden ~= nil then
+        if ProjectJaina_Companion_DB.BarHidden then
+            tacticalBar:Hide()
+        else
+            tacticalBar:Show()
+        end
     else
-        tacticalBar:Show()
+        -- Prevencion de colision visual: Si MultiBot esta cargado, ocultar por defecto la barra tactica
+        if IsAddOnLoaded and (IsAddOnLoaded("ProjectJaina_MultiBot") or IsAddOnLoaded("MultiBot")) then
+            tacticalBar:Hide()
+            if ProjectJaina_Companion_DB then ProjectJaina_Companion_DB.BarHidden = true end
+        else
+            tacticalBar:Show()
+        end
     end
 end
 
