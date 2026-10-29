@@ -142,7 +142,7 @@ def test_retail_api_leak():
 
 if __name__ == "__main__":
     print("=" * 50)
-    print("      WOWPERU_COMPANION TEST SUITE               ")
+    print("      PROJECTJAINA_COMPANION TEST SUITE         ")
     print("=" * 50)
     t1 = test_toc_integrity()
     t2 = test_lua_syntax()
