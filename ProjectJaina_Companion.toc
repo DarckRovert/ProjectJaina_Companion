@@ -1,8 +1,9 @@
 ## Interface: 30300
+## Version: 2.2.1
 ## Title: |cFFD4AF37Project Jaina|r - Companion
 ## Notes: Hub social ligero y barra de control táctico de Playerbots del ecosistema Project Jaina. Incluye gestión de roles, formaciones, auto-pull, sincronización de grupo y telemetría de vendettas de clanes.
 ## Author: DarckRovert (Ingame: Elnazzareno) & Antigravity (Mythos 5)
-## Version: 2.2.0
+## Version: 2.2.1
 ## SavedVariables: ProjectJaina_Companion_DB
 
 Config.lua
