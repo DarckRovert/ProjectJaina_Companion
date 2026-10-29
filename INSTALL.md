@@ -7,7 +7,7 @@ Instrucciones oficiales para instalar y verificar **ProjectJaina_Companion** en 
 ## 📥 Requisitos Previos
 
 1. **Cliente WoW 3.3.5a (Build 12340):** Asegúrate de contar con una instalación limpia o estándar de Wrath of the Lich King.
-2. **Acceso al Directorio del Juego:** Ubicación habitual en `d:\Project Jaina\Client\` o donde tengas alojado tu ejecutable `Wow.exe`.
+2. **Acceso al Directorio del Juego:** Ubicación habitual en `<Directorio de Juego>\` o donde tengas alojado tu ejecutable `Wow.exe`.
 
 ---
 
@@ -18,7 +18,7 @@ Instrucciones oficiales para instalar y verificar **ProjectJaina_Companion** en 
 Abre tu terminal en la carpeta de AddOns:
 
 ```bash
-cd "d:\Project Jaina\Client\Interface\AddOns\"
+cd "<Directorio de Juego>\Interface\AddOns\"
 git clone https://github.com/DarckRovert/ProjectJaina_Companion.git
 ```
 
@@ -59,7 +59,7 @@ Una vez dentro del mundo:
 
 1. Deberías ver un mensaje en el chat general:
    ```
-   [Project Jaina] v1.0.1 cargado. Usa /companion
+   [Project Jaina] v2.2.1 cargado. Usa /companion
    ```
 2. Ejecuta en el chat:
    ```
