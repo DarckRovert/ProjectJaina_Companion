@@ -4,6 +4,13 @@ Todos los cambios notables de este proyecto están documentados en este archivo 
 
 ---
 
+## [2.2.1] — 2026-10-28
+### Registro de Telemetría Multilingüe de Ecosistema (`ProjectJaina_Polyglot`)
+- **Registro en Radar de Ecosistema (`Config.lua`):** Incorporado `ProjectJaina_Polyglot` a la tabla `C.Config.EcosystemAddons` con clave `polyglot`, nombre oficial `ProjectJaina_Polyglot` y etiqueta `Traductor`, garantizando su descubrimiento automático y sincronización de estado P2P entre miembros del grupo.
+- **Validación de Runtime:** Verificación sintáctica 100% limpia con `lua52_compiler.exe -p` con 0 errores.
+
+---
+
 ## [2.2.0] — 2026-10-24
 ### Telemetría de Clanes de Bots y Venganza de Hermandad ("Ojo por Ojo")
 - **Telemetría de Vendettas (`/pjc vendettas` / `/vendetta`):** Incorporada consulta de estado de cacerías de sangre de cofradías de bots contra el jugador tras matar a un bot en PvP de mundo abierto.
