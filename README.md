@@ -1,6 +1,10 @@
-# ❄️ Project Jaina — Companion (v2.0.0)
+<p align="center">
+  <img src="https://raw.githubusercontent.com/DarckRovert/ProjectJaina_Web/main/images/project_jaina_official_logo.jpg" alt="Project JAIna Official Crest" width="180">
+</p>
 
-**Versión:** 2.0.0 (WotLK Hardened Edition — Tactical Suite)  
+# ❄️ Project Jaina — Companion (v2.2.1)
+
+**Versión:** 2.2.1 (WotLK Hardened Edition — Tactical Suite)  
 **Autor:** DarckRovert (Ingame: `Elnazzareno`) & Antigravity (Mythos 5)  
 **Servidor Destino:** [Project Jaina](https://darckrovert.github.io/ProjectJaina_Web/) — Project Jaina  
 **Entorno de Ejecución:** World of Warcraft 3.3.5a (Build 12340) | Lua 5.1 puro  
