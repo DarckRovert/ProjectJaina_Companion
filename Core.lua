@@ -517,8 +517,14 @@ SlashCmdList["WPCOMP"] = function(msg)
             CPrint("Canal actual: " .. cur)
             CPrint("Uso: /companion channel [group|party|say|off]")
         end
+    elseif cmd == "botbar" or cmd == "bar" or cmd == "bots" then
+        C.ToggleTacticalBar()
+    elseif cmd == "vendetta" or cmd == "caza" then
+        if SlashCmdList["PROJECTJAINA_BOTBAR"] then
+            SlashCmdList["PROJECTJAINA_BOTBAR"]("vendetta")
+        end
     else
-        CPrint("Uso: /companion [status|scan|channel|debug]")
+        CPrint("Uso: /companion [status|scan|channel|botbar|vendetta|debug]")
         CPrint("Comandos Cross-Faction: /comerciar y /invitar [Nombre]")
     end
 end
@@ -1091,8 +1097,8 @@ end
 SLASH_PROJECTJAINA_BOTBAR1 = "/jainabot"
 SLASH_PROJECTJAINA_BOTBAR2 = "/jainacompanion"
 SLASH_PROJECTJAINA_BOTBAR3 = "/botbar"
-SLASH_PROJECTJAINA_BOTBAR4 = "/pjc"
-SLASH_PROJECTJAINA_BOTBAR5 = "/companion"
+SLASH_PROJECTJAINA_BOTBAR4 = "/tactical"
+SLASH_PROJECTJAINA_BOTBAR5 = "/bots"
 SLASH_PROJECTJAINA_BOTBAR6 = "/vendetta"
 SlashCmdList["PROJECTJAINA_BOTBAR"] = function(msg)
     local cmd = (msg or ""):lower():match("^%s*(%S+)")
