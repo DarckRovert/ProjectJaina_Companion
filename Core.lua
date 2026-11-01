@@ -43,6 +43,24 @@ if _Orig_ChatFrame_MessageEventHandler then
     end
 end
 
+-- ================================================================
+-- SILENCIADOR DE TELEMETRIA P2P DE ADDONS (Carbonite Crb* Sync)
+-- Suprime paquetes crudos de sincronizacion (S%, U^, etc.) del chat general
+-- ================================================================
+if type(_G.ChatFrame_AddMessageEventFilter) == "function" then
+    local function FilterCarboniteChannel(self, event, msg, _, _, _, _, _, _, _, channelName)
+        if channelName and (channelName:find("^Crb") or channelName:find("^crb")) then
+            return true
+        end
+        return false
+    end
+    _G.ChatFrame_AddMessageEventFilter("CHAT_MSG_CHANNEL", FilterCarboniteChannel)
+    _G.ChatFrame_AddMessageEventFilter("CHAT_MSG_CHANNEL_JOIN", FilterCarboniteChannel)
+    _G.ChatFrame_AddMessageEventFilter("CHAT_MSG_CHANNEL_LEAVE", FilterCarboniteChannel)
+    _G.ChatFrame_AddMessageEventFilter("CHAT_MSG_CHANNEL_NOTICE", FilterCarboniteChannel)
+    _G.ChatFrame_AddMessageEventFilter("CHAT_MSG_CHANNEL_NOTICE_USER", FilterCarboniteChannel)
+end
+
 ProjectJaina_Companion = ProjectJaina_Companion or {}
 local C = ProjectJaina_Companion
 
