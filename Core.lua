@@ -820,19 +820,29 @@ _G["BINDING_NAME_PROJECTJAINA_COMPANION_TOGGLEBAR"] = "Alternar Barra Táctica d
 function C.SendCommand(action, arg)
     if not action then return end
     local groupChannel = GetGroupChannel()
-    local isFriendlyPlayer = UnitExists("target") and UnitIsPlayer("target") and UnitIsFriend("player", "target")
-    local targetBotName = isFriendlyPlayer and UnitName("target")
+    local hasValidTarget = UnitExists("target") and UnitIsPlayer("target") and UnitIsFriend("player", "target") and not UnitIsUnit("player", "target")
+    local targetBotName = hasValidTarget and UnitName("target")
+    local isShiftPressed = IsShiftKeyDown and IsShiftKeyDown()
 
     local function DispatchOrder(cmd, desc)
-        if targetBotName then
+        -- Si se sostiene Shift y hay un bot aliado seleccionado, enviar orden individual
+        if isShiftPressed and targetBotName then
             SendChatMessage(cmd, "WHISPER", nil, targetBotName)
-            CPrint("|cFF00FFCCOrden táctica a |cFFFFD100" .. targetBotName .. "|r: |cFFFFFF00" .. cmd .. "|r")
+            CPrint(string.format("|cFF00FFCCOrden táctica individual a |cFFFFD100%s|r: |cFFFFFF00%s|r", targetBotName, cmd))
             return
         end
 
+        -- Comandar al escuadrón completo si se encuentra en grupo/banda
         if groupChannel then
             SendChatMessage(cmd, groupChannel)
             if desc then CPrint(desc) end
+            return
+        end
+
+        -- Fallback a objetivo individual si está fuera de grupo
+        if targetBotName then
+            SendChatMessage(cmd, "WHISPER", nil, targetBotName)
+            CPrint(string.format("|cFF00FFCCOrden táctica a |cFFFFD100%s|r: |cFFFFFF00%s|r", targetBotName, cmd))
             return
         end
 
@@ -844,7 +854,7 @@ function C.SendCommand(action, arg)
     elseif action == "stay" then
         DispatchOrder("stay", "|cFF00FFCCEscuadrón:|r Alto / Esperando en posición.")
     elseif action == "attack" then
-        if groupChannel then
+        if groupChannel and not (isShiftPressed and targetBotName) then
             SendChatMessage("attack", groupChannel)
             if UnitExists("target") and UnitCanAttack("player", "target") then
                 CPrint("|cFF00FFCCEscuadrón:|r Atacando a |cFFFFD100" .. (UnitName("target") or "Objetivo") .. "|r.")
@@ -859,7 +869,7 @@ function C.SendCommand(action, arg)
         if UnitExists("target") and UnitCanAttack("player", "target") then
             -- Marca de Foco Táctico oficial: Calavera (Raid Target 8)
             pcall(function() SetRaidTarget("target", 8) end)
-            if groupChannel then
+            if groupChannel and not (isShiftPressed and targetBotName) then
                 SendChatMessage("attack", groupChannel)
             elseif targetBotName then
                 SendChatMessage("attack", "WHISPER", nil, targetBotName)
@@ -872,7 +882,7 @@ function C.SendCommand(action, arg)
         SendChatMessage(".rdf revive", "SAY")
         CPrint("|cFF00FFCCSincronización de Escuadrón:|r Reanimando y teletransportando bots caídos a tu posición...")
     elseif action == "pull" then
-        if groupChannel then
+        if groupChannel and not (isShiftPressed and targetBotName) then
             SendChatMessage("pull", groupChannel)
             CPrint("|cFF00FFCCAuto-Pull activado:|r El bot tanque inicia el pull táctico.")
         elseif targetBotName then
@@ -893,17 +903,16 @@ function C.SendCommand(action, arg)
         SendChatMessage(".rdf dps", "SAY")
         CPrint("|cFF00FFCCReclutamiento:|r Convocando DPS táctico para tu escuadrón...")
     elseif action == "regear" then
-        SendChatMessage(".playerbots regear", "SAY")
-        CPrint("|cFF00FFCCRe-alineación de Equipo:|r Actualizando equipamiento y estadísticas de los bots...")
-    elseif action == "raid" then
-        local size = tonumber(arg) or 5
-        if size == 5 then
-            SendChatMessage(".rdf bots", "SAY")
-            CPrint("|cFF00FFCCGrupo Completo (5-man):|r Formando escuadrón de mazmorra balanceado (1T/1H/3DPS)...")
-        else
-            SendChatMessage(".playerbots raid " .. tostring(size), "SAY")
-            CPrint(string.format("|cFF00FFCCBanda (%d-man):|r Convocando formación de banda táctica...", size))
-        end
+        DispatchOrder("equip", "|cFF00FFCCAuto-Equipar:|r Ordenando a los bots equipar sus mejores objetos...")
+    elseif action == "reset" or action == "dismiss" then
+        SendChatMessage(".rdf reset", "SAY")
+        CPrint("|cFF00FFCCDesbandar Bots:|r Desvinculando y liberando bots del escuadrón...")
+    elseif action == "remove_all" then
+        SendChatMessage(".bot remove *", "SAY")
+        CPrint("|cFF00FFCCExpulsar Bots:|r Retirando a todos los bots convocados...")
+    elseif action == "full_group" then
+        SendChatMessage(".rdf bots", "SAY")
+        CPrint("|cFF00FFCCGrupo Completo (5-man):|r Formando escuadrón de mazmorra balanceado (1T/1H/3DPS)...")
     end
 end
 
@@ -941,9 +950,9 @@ function C.ToggleRecruitMenu(anchorFrame)
             { text = "|cFF0070DETanque (Tank)|r", cmd = "recruit_tank" },
             { text = "|cFF00FF00Sanador (Healer)|r", cmd = "recruit_healer" },
             { text = "|cFFFF2020DPS|r", cmd = "recruit_dps" },
-            { text = "|cFFFFD100Grupo 5 (5-man)|r", cmd = "raid", arg = 5 },
-            { text = "|cFFFF8000Banda 10 (10-man)|r", cmd = "raid", arg = 10 },
-            { text = "|cFF9932CCBanda 25 (25-man)|r", cmd = "raid", arg = 25 },
+            { text = "|cFFFFD100Auto-Llenar Grupo (5-man)|r", cmd = "full_group" },
+            { text = "|cFFFF9900Desbandar Escuadrón (.rdf reset)|r", cmd = "reset" },
+            { text = "|cFFFF4444Expulsar Todos (*)|r", cmd = "remove_all" },
         }
 
         for i, item in ipairs(items) do
@@ -1016,7 +1025,7 @@ function C.CreateTacticalBar()
         { name = "Pull", tip = "Auto-Pull del Tanque\n|cFF888888El bot tanque inicia el pull de forma táctica.|r", icon = "Interface\\Icons\\Ability_Hunter_SniperShot", cmd = "pull" },
         { name = "Passive", tip = "Modo Pasivo\n|cFF888888Detiene el combate de los bots inmediatamente.|r", icon = "Interface\\Icons\\Spell_Holy_Peace", cmd = "passive" },
         { name = "Recruit", tip = "Reclutar Bot\n|cFF888888Click izquierdo: Menú de roles.\nClick derecho: Reclutar Tanque.|r", icon = "Interface\\Icons\\Achievement_Reputation_01", isRecruit = true },
-        { name = "Regear", tip = "Reequipar (Regear)\n|cFF888888Actualiza y optimiza el equipo del bot seleccionado.|r", icon = "Interface\\Icons\\INV_Hammer_20", cmd = "regear" },
+        { name = "Regear", tip = "Auto-Equipar (Equip)\n|cFF888888Ordena a los bots de tu grupo equiparse sus mejores objetos.|r", icon = "Interface\\Icons\\INV_Hammer_20", cmd = "regear" },
     }
 
     local btnSize = 28
