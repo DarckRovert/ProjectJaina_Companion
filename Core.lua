@@ -421,6 +421,10 @@ local function ExecuteOrWarn(slashKey, fallbackKey, moduleName)
         Chatter:Toggle()
     elseif moduleName == "Graficos HD" and ProjectJaina_Graphics and ProjectJaina_Graphics.ToggleUI then
         ProjectJaina_Graphics:ToggleUI()
+    elseif moduleName == "Radio Kirin Tor" and ProjectJaina_Radio_ToggleUI then
+        ProjectJaina_Radio_ToggleUI()
+    elseif moduleName == "Radio Kirin Tor" and SlashCmdList and SlashCmdList["PROJECTJAINA_RADIO"] then
+        SlashCmdList["PROJECTJAINA_RADIO"]("")
     else
         CPrint(string.format("|cFFFF4444El modulo %s no esta activo o instalado.|r", moduleName))
     end
@@ -444,13 +448,13 @@ local function OpenHubMenu(anchor)
         { text = "|cFFFFD100Suite Gráfica HD|r (/graficos)", notCheckable = true, func = function()
             ExecuteOrWarn("JAINA_GRAPHICS", "WOWPERU_GRAPHICS", "Graficos HD")
         end },
-        { text = "|cFF00FFCCGestor de Bots con IA|r (/bots)", notCheckable = true, func = function()
+        { text = "|cFF00FFCCGestor de Bots con IA|r (/llmc)", notCheckable = true, func = function()
             ExecuteOrWarn("CHATTER", "LLMC", "Chatter LLM")
         end },
         { text = "|cFFFFD100Playerbots (MultiBot)|r (/multibot)", notCheckable = true, func = function()
             ExecuteOrWarn("MULTIBOT", "ACECONSOLE_MULTIBOT", "MultiBot")
         end },
-        { text = "|cFFD4AF37Barra Táctica de Bots|r (/botbar)", notCheckable = true, func = function()
+        { text = "|cFFD4AF37Barra Táctica de Bots|r (/botbar o /bots)", notCheckable = true, func = function()
             if C.ToggleTacticalBar then C.ToggleTacticalBar() end
         end },
         { text = "|cFFFFD100Tesorería de Dalaran|r (/tienda)", notCheckable = true, func = function()
@@ -464,6 +468,12 @@ local function OpenHubMenu(anchor)
         end },
         { text = "|cFF00CCFFVoz Espacial 3D|r (/voz)", notCheckable = true, func = function()
             ExecuteOrWarn("PROJECTJAINA_VOZ", "VOZ", "Voz 3D")
+        end },
+        { text = "|cFF00CCFFTraductor Universal|r (/polyglot)", notCheckable = true, func = function()
+            ExecuteOrWarn("POLYGLOT", nil, "Polyglot")
+        end },
+        { text = "|cFF00CCFFRadio Kirin Tor FM|r (/radio)", notCheckable = true, func = function()
+            ExecuteOrWarn("PROJECTJAINA_RADIO", "RADIO", "Radio Kirin Tor")
         end },
         { text = " ", notCheckable = true, disabled = true },
         { text = "Herramientas de Grupo", hasArrow = true, notCheckable = true,
@@ -904,12 +914,25 @@ function C.SendCommand(action, arg)
         CPrint("|cFF00FFCCReclutamiento:|r Convocando DPS táctico para tu escuadrón...")
     elseif action == "regear" then
         DispatchOrder("equip", "|cFF00FFCCAuto-Equipar:|r Ordenando a los bots equipar sus mejores objetos...")
-    elseif action == "reset" or action == "dismiss" then
+    elseif action == "reset" or action == "dismiss" or action == "remove_all" then
+        -- 1. Despacho autoritativo al servidor (Eluna 90_Playerbot_InstantQueue.lua)
         SendChatMessage(".rdf reset", "SAY")
-        CPrint("|cFF00FFCCDesbandar Bots:|r Desvinculando y liberando bots del escuadrón...")
-    elseif action == "remove_all" then
-        SendChatMessage(".bot remove *", "SAY")
-        CPrint("|cFF00FFCCExpulsar Bots:|r Retirando a todos los bots convocados...")
+
+        -- 2. Limpieza y desbande garantizado en la API nativa del cliente
+        local numParty = GetNumPartyMembers()
+        if numParty and numParty > 0 then
+            for i = 1, numParty do
+                local unit = "party" .. i
+                if UnitExists(unit) and not UnitIsUnit(unit, "player") then
+                    local name = UnitName(unit)
+                    if name then
+                        UninviteUnit(name)
+                    end
+                end
+            end
+            LeaveParty()
+        end
+        CPrint("|cFF00FFCCEscuadrón Desbandado:|r Todos los bots han sido retirados y el grupo liberado con éxito.")
     elseif action == "full_group" then
         SendChatMessage(".rdf bots", "SAY")
         CPrint("|cFF00FFCCGrupo Completo (5-man):|r Formando escuadrón de mazmorra balanceado (1T/1H/3DPS)...")
@@ -952,7 +975,7 @@ function C.ToggleRecruitMenu(anchorFrame)
             { text = "|cFFFF2020DPS|r", cmd = "recruit_dps" },
             { text = "|cFFFFD100Auto-Llenar Grupo (5-man)|r", cmd = "full_group" },
             { text = "|cFFFF9900Desbandar Escuadrón (.rdf reset)|r", cmd = "reset" },
-            { text = "|cFFFF4444Expulsar Todos (*)|r", cmd = "remove_all" },
+            { text = "|cFFFF4444Expulsar Todos (Desbandar)|r", cmd = "remove_all" },
         }
 
         for i, item in ipairs(items) do
