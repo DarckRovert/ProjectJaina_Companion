@@ -425,6 +425,28 @@ local function ExecuteOrWarn(slashKey, fallbackKey, moduleName)
         ProjectJaina_Radio_ToggleUI()
     elseif moduleName == "Radio Kirin Tor" and SlashCmdList and SlashCmdList["PROJECTJAINA_RADIO"] then
         SlashCmdList["PROJECTJAINA_RADIO"]("")
+    elseif moduleName == "LoreHUD" and ProjectJaina_LoreHUD_ToggleUI then
+        ProjectJaina_LoreHUD_ToggleUI()
+    elseif moduleName == "MemoryGuard" and SlashCmdList and SlashCmdList["PROJECTJAINA_MEMGUARD"] then
+        SlashCmdList["PROJECTJAINA_MEMGUARD"]("")
+    elseif moduleName == "Talented" and Talented and Talented.OpenOptionsFrame then
+        Talented:OpenOptionsFrame()
+    elseif moduleName == "RaidSuite" and SlashCmdList and SlashCmdList["JAINA_RAIDSUITE"] then
+        SlashCmdList["JAINA_RAIDSUITE"]("")
+    elseif moduleName == "AdminTools" and ProjectJaina_AdminTools_ToggleUI then
+        ProjectJaina_AdminTools_ToggleUI()
+    elseif moduleName == "AdminTools" and SlashCmdList and SlashCmdList["ADMINTOOLS"] then
+        SlashCmdList["ADMINTOOLS"]("")
+    elseif moduleName == "GMGenie" and GMGenie and GMGenie.ControlPanel and GMGenie.ControlPanel.Toggle then
+        GMGenie.ControlPanel.Toggle()
+    elseif moduleName == "GMGenie" and SlashCmdList and SlashCmdList["JAINAGM"] then
+        SlashCmdList["JAINAGM"]("")
+    elseif moduleName == "Spoken" or moduleName == "Spoken Lore" then
+        if SlashCmdList and SlashCmdList["SPOKEN"] then
+            SlashCmdList["SPOKEN"]("settings")
+        else
+            CPrint(string.format("|cFFFF4444El modulo %s no esta activo o instalado.|r", moduleName))
+        end
     else
         CPrint(string.format("|cFFFF4444El modulo %s no esta activo o instalado.|r", moduleName))
     end
@@ -475,6 +497,25 @@ local function OpenHubMenu(anchor)
         { text = "|cFF00CCFFRadio Kirin Tor FM|r (/radio)", notCheckable = true, func = function()
             ExecuteOrWarn("PROJECTJAINA_RADIO", "RADIO", "Radio Kirin Tor")
         end },
+        { text = "|cFFFFD100Narración & Lore (Spoken)|r (/spoken)", notCheckable = true, func = function()
+            ExecuteOrWarn("SPOKEN", nil, "Spoken")
+        end },
+        { text = "|cFF00FFCCCompendio de Azeroth|r (/spoken compendium)", notCheckable = true, func = function()
+            if SlashCmdList and SlashCmdList["SPOKEN"] then
+                SlashCmdList["SPOKEN"]("compendium")
+            else
+                ExecuteOrWarn("SPOKEN", nil, "Spoken")
+            end
+        end },
+        { text = "|cFF34D399Blindaje Anti-OOM (Memoria)|r (/pjmem)", notCheckable = true, func = function()
+            ExecuteOrWarn("PROJECTJAINA_MEMGUARD", nil, "MemoryGuard")
+        end },
+        { text = "|cFF81C784Suite de Banda & Tácticas|r (/suite)", notCheckable = true, func = function()
+            ExecuteOrWarn("JAINA_RAIDSUITE", "SUITE", "RaidSuite")
+        end },
+        { text = "|cFFF57C00Gestor de Talentos & Builds|r (/talented)", notCheckable = true, func = function()
+            ExecuteOrWarn("TALENTED", "ACECONSOLE_TALENTED", "Talented")
+        end },
         { text = " ", notCheckable = true, disabled = true },
         { text = "Herramientas de Grupo", hasArrow = true, notCheckable = true,
           menuList = {
@@ -482,9 +523,33 @@ local function OpenHubMenu(anchor)
               { text = "Imprimir Estado de Companeros", notCheckable = true, func = PrintGroupStatus },
           }
         },
-        { text = " ", notCheckable = true, disabled = true },
-        { text = "|cFF888888Cerrar|r", notCheckable = true, func = function() end },
     }
+
+    if IsAddonLoaded("ProjectJaina_AdminTools") or IsAddonLoaded("ProjectJaina_GMGenie") then
+        local staffMenu = {}
+        if IsAddonLoaded("ProjectJaina_AdminTools") then
+            table.insert(staffMenu, {
+                text = "|cFFFFD700Admin Tools (Armería GM)|r (/admin)", notCheckable = true, func = function()
+                    ExecuteOrWarn("ADMINTOOLS", "ADMIN", "AdminTools")
+                end
+            })
+        end
+        if IsAddonLoaded("ProjectJaina_GMGenie") then
+            table.insert(staffMenu, {
+                text = "|cFF00CCFFGM Genie & Staff Suite|r (/jainagm)", notCheckable = true, func = function()
+                    ExecuteOrWarn("JAINAGM", "STAFF", "GMGenie")
+                end
+            })
+        end
+        table.insert(menuList, {
+            text = "|cFFFF4444Herramientas de Staff / GM|r", hasArrow = true, notCheckable = true,
+            menuList = staffMenu
+        })
+    end
+
+    table.insert(menuList, { text = " ", notCheckable = true, disabled = true })
+    table.insert(menuList, { text = "|cFF888888Cerrar|r", notCheckable = true, func = function() end })
+
     EasyMenu(menuList, hubDropDown, anchor or "cursor", 0, 0, "MENU")
 end
 

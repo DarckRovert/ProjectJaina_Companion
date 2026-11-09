@@ -32,6 +32,9 @@ C.Config = {
         { name = "ProjectJaina_GMGenie",        label = "JainaGM Staff",  color = "FF00CCFF" },
         { name = "ProjectJaina_Polyglot",       label = "Polyglot",       color = "FF00CCFF" },
         { name = "ProjectJaina_Radio",          label = "Radio FM",       color = "FFFF8000" },
+        { name = "Spoken",                      label = "Spoken Lore",    color = "FFFFD100" },
+        { name = "ProjectJaina_MemoryGuard",    label = "MemoryGuard",    color = "FF34D399" },
+        { name = "ProjectJaina_AdminTools",     label = "AdminTools",     color = "FFFF4444" },
     },
 
     -- Prefijo de red soberano
