@@ -8,7 +8,7 @@ ProjectJaina_Companion = ProjectJaina_Companion or {}
 local C = ProjectJaina_Companion
 
 C.Config = {
-    Version         = "2.0.0",
+    Version         = "2.2.2",
     AnnounceChannel = "GROUP",   -- GROUP | PARTY | SAY | OFF ("")
     Debug           = false,
 
