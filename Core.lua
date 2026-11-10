@@ -576,15 +576,18 @@ SlashCmdList["WPCOMP"] = function(msg)
         PrintGroupStatus()
     elseif cmd == "debug" then
         C.Config.Debug = not C.Config.Debug
+        if ProjectJaina_Companion_DB then ProjectJaina_Companion_DB.Debug = C.Config.Debug end
         if ProjectJainaCompanion_DB then ProjectJainaCompanion_DB.Debug = C.Config.Debug end
         CPrint("Debug: " .. (C.Config.Debug and "ON" or "OFF"))
     elseif cmd == "channel" then
         if arg == "group" or arg == "party" or arg == "say" then
             C.Config.AnnounceChannel = arg:upper()
+            if ProjectJaina_Companion_DB then ProjectJaina_Companion_DB.AnnounceChannel = C.Config.AnnounceChannel end
             if ProjectJainaCompanion_DB then ProjectJainaCompanion_DB.AnnounceChannel = C.Config.AnnounceChannel end
             CPrint("Canal de anuncios configurado en: " .. C.Config.AnnounceChannel)
         elseif arg == "off" or arg == "none" then
             C.Config.AnnounceChannel = ""
+            if ProjectJaina_Companion_DB then ProjectJaina_Companion_DB.AnnounceChannel = "" end
             if ProjectJainaCompanion_DB then ProjectJainaCompanion_DB.AnnounceChannel = "" end
             CPrint("Anuncios desactivados.")
         else
@@ -595,7 +598,9 @@ SlashCmdList["WPCOMP"] = function(msg)
     elseif cmd == "botbar" or cmd == "bar" or cmd == "bots" then
         C.ToggleTacticalBar()
     elseif cmd == "vendetta" or cmd == "caza" then
-        if SlashCmdList["PROJECTJAINA_BOTBAR"] then
+        if SlashCmdList["PROJECTJAINA_VENDETTA"] then
+            SlashCmdList["PROJECTJAINA_VENDETTA"]()
+        elseif SlashCmdList["PROJECTJAINA_BOTBAR"] then
             SlashCmdList["PROJECTJAINA_BOTBAR"]("vendetta")
         end
     else
@@ -1196,16 +1201,14 @@ SLASH_PROJECTJAINA_BOTBAR2 = "/jainacompanion"
 SLASH_PROJECTJAINA_BOTBAR3 = "/botbar"
 SLASH_PROJECTJAINA_BOTBAR4 = "/tactical"
 SLASH_PROJECTJAINA_BOTBAR5 = "/bots"
-SLASH_PROJECTJAINA_BOTBAR6 = "/vendetta"
 SlashCmdList["PROJECTJAINA_BOTBAR"] = function(msg)
     local cmd = (msg or ""):lower():match("^%s*(%S+)")
     if cmd == "follow" or cmd == "stay" or cmd == "attack" or cmd == "focus" or cmd == "revive" or cmd == "sync" or cmd == "pull" or cmd == "passive" or cmd == "regear" then
         C.SendCommand(cmd)
     elseif cmd == "vendetta" or cmd == "vendettas" or cmd == "caza" or cmd == "caceria" then
-        CPrint("|cFFFF0000=== Sistema de Vendetta de Hermandad (Ojo por Ojo) ===|r")
-        CPrint("Gobernanza activa: Si un jugador asesina a un Playerbot en PvP abierto de mundo, el clan del bot abatido declara una deuda de sangre.")
-        CPrint("Reglas de honor: Un escuadrón de 2-3 cazadores te buscará en el mundo. La vendetta se sacia con |cFF00FF001 muerte del asesino|r o expira tras |cFF00FF0015 minutos de supervivencia|r.")
-        CPrint("Cofradías autónomas: <La Cofradía de la Espada Negra>, <Los Centinelas de la Aurora>, <Pacto de Sangre de Kalimdor>, <El Sindicato de Trinquete>, <Custodios de los Arcanos>, <Hijos del Invierno>.")
+        if SlashCmdList["PROJECTJAINA_VENDETTA"] then
+            SlashCmdList["PROJECTJAINA_VENDETTA"]()
+        end
     elseif cmd == "recruit" then
         local sub = (msg or ""):lower():match("recruit%s+(%S+)")
         if sub == "tank" then C.SendCommand("recruit_tank")
@@ -1216,5 +1219,17 @@ SlashCmdList["PROJECTJAINA_BOTBAR"] = function(msg)
     else
         C.ToggleTacticalBar()
     end
+end
+
+-- Despachador canónico exclusivo para el sistema de Vendettas de Hermandad
+SLASH_PROJECTJAINA_VENDETTA1 = "/vendetta"
+SLASH_PROJECTJAINA_VENDETTA2 = "/vendettas"
+SLASH_PROJECTJAINA_VENDETTA3 = "/caza"
+SLASH_PROJECTJAINA_VENDETTA4 = "/caceria"
+SlashCmdList["PROJECTJAINA_VENDETTA"] = function()
+    CPrint("|cFFFF0000=== Sistema de Vendetta de Hermandad (Ojo por Ojo) ===|r")
+    CPrint("Gobernanza activa: Si un jugador asesina a un Playerbot en PvP abierto de mundo, el clan del bot abatido declara una deuda de sangre.")
+    CPrint("Reglas de honor: Un escuadrón de 2-3 cazadores te buscará en el mundo. La vendetta se sacia con |cFF00FF001 muerte del asesino|r o expira tras |cFF00FF0015 minutos de supervivencia|r.")
+    CPrint("Cofradías autónomas: <La Cofradía de la Espada Negra>, <Los Centinelas de la Aurora>, <Pacto de Sangre de Kalimdor>, <El Sindicato de Trinquete>, <Custodios de los Arcanos>, <Hijos del Invierno>.")
 end
 
