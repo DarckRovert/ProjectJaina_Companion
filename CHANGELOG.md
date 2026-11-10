@@ -4,6 +4,14 @@ Todos los cambios notables de este proyecto están documentados en este archivo 
 
 ---
 
+## [2.2.2] — 2026-11-10
+### Segmentación P2P Multi-Parte, Normalización de Modos y Deduplicación Cross-Prefix (Hito #341 / Bug #7)
+- **Fragmentación Segura `JAINA_ADDONS_P` (`Core.lua`):** Los broadcasts de catálogo superior a `220 bytes` ahora se fragmentan en bloques indexados (`JAINA_ADDONS_P:<idx>/<total>:...`) para evitar truncamiento en el límite duro de 255 bytes de `CHAT_MSG_ADDON`.
+- **Soporte Unificado de Modos de Juego (`NormalizeGameMode`):** Detección y normalización de `SLOW_X1` y `DIE_AND_RISE` junto con `HARDCORE`, `IRONMAN` y `NORMAL`.
+- **Transmisión Limpia & Anti-Eco:** Emisión única sobre prefijo primario (`JAINA_COMP`, con escucha legacy `WP_COMP`) y ventana anti-eco de `0.30s` verificada mediante `Tests/validate_companion.py`.
+
+---
+
 ## [2.2.1] — 2026-10-28
 ### Registro de Telemetría Multilingüe de Ecosistema (`ProjectJaina_Polyglot`)
 - **Registro en Radar de Ecosistema (`Config.lua`):** Incorporado `ProjectJaina_Polyglot` a la tabla `C.Config.EcosystemAddons` con clave `polyglot`, nombre oficial `ProjectJaina_Polyglot` y etiqueta `Traductor`, garantizando su descubrimiento automático y sincronización de estado P2P entre miembros del grupo.

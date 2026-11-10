@@ -22,31 +22,28 @@ ProjectJaina_Companion = {
 
 ---
 
-## 2. Protocolo de Telemetría P2P (`WP_COMP`)
+## 2. Protocolo de Telemetría P2P (`JAINA_COMP` / `WP_COMP`)
 
-### Prefijo Registrado
-- **Prefijo:** `WP_COMP`
-- **Registro:** Se realiza defensivamente mediante:
-  ```lua
-  if RegisterAddonMessagePrefix then
-      RegisterAddonMessagePrefix("WP_COMP")
-  end
-  ```
+### Prefijos Registrados
+- **Primario:** `JAINA_COMP` (Legacy retrocompatible: `WP_COMP`, con deduplicación anti-eco de `0.30s`).
+- **Registro:** Se realiza defensivamente mediante `RegisterAddonMessagePrefix`.
 
-### Formato de Paquete Saliente (Broadcast)
-Los paquetes viajan a través de los canales protegidos `RAID` o `PARTY` invocando:
-```lua
-SendAddonMessage("WP_COMP", payload, channel)
+### Formato de Paquete Saliente (Broadcast y Fragmentación <= 220B)
+Los paquetes viajan a través de los canales protegidos `RAID` o `PARTY` invocando `SendAddonMessage`:
+
+**Estructura Estándar (`<= 220 bytes`):**
+```
+JAINA_ADDONS:<addon_label_1>,<addon_label_2>,...|<GAME_MODE>
 ```
 
-**Estructura del Payload:**
+**Estructura Fragmentada (`> 220 bytes`):**
 ```
-WP_ADDONS:<addon_label_1>,<addon_label_2>,...|<GAME_MODE>
+JAINA_ADDONS_P:<idx>/<total>:<chunk>|<GAME_MODE>
 ```
 
 **Parámetros:**
-- `addon_label_n`: Etiquetas de addons detectados localmente (`LoreHUD`, `BattlePass`, `Companion`, `GameModes`, `RaidSuite`, `VisualShop`).
-- `GAME_MODE`: Modalidad del jugador (`NORMAL`, `HARDCORE`, `IRONMAN`, `SLOW_X1`).
+- `addon_label_n`: Etiquetas de addons detectados localmente (`LoreHUD`, `BattlePass`, `Companion`, `GameModes`, `RaidSuite`, `VisualShop`, `Polyglot`, `MemoryGuard`, etc.).
+- `GAME_MODE`: Modalidad normalizada mediante `NormalizeGameMode` (`NORMAL`, `HARDCORE`, `IRONMAN`, `DIE_AND_RISE`, `SLOW_X1`).
 
 **Ejemplos de Payload:**
 - Jugador con todo el ecosistema en Hardcore:

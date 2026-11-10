@@ -96,11 +96,24 @@ local function IsAddonLoaded(name)
     return (loaded and true) or false
 end
 
+local MAX_ADDON_BODY_BYTES = 220
+local pendingAddonChunks   = {} -- [sender] = { total = n, received = k, mode = m, parts = {}, ts = t }
+local recentAddonPackets   = {} -- [sender .. "\0" .. msg] = GetTime()
+
+local function NormalizeGameMode(mode)
+    if not mode then return "NORMAL" end
+    local up = tostring(mode):upper()
+    if up == "X1" or up == "SLOW_X1" then return "SLOW_X1" end
+    if up == "DIERISE" or up == "DIE_AND_RISE" then return "DIE_AND_RISE" end
+    if up == "HARDCORE" or up == "IRONMAN" or up == "NORMAL" then return up end
+    return up
+end
+
 local function GetLocalGameMode()
     if ProjectJaina_GameModes_CharDB
        and ProjectJaina_GameModes_CharDB.hasSelectedMode
        and ProjectJaina_GameModes_CharDB.selectedMode then
-        return ProjectJaina_GameModes_CharDB.selectedMode
+        return NormalizeGameMode(ProjectJaina_GameModes_CharDB.selectedMode)
     end
 
     -- Fallback resiliente a cabinas de internet (WTF reseteado): Escanear auras del servidor
@@ -108,24 +121,22 @@ local function GetLocalGameMode()
         local auraName = UnitAura("player", i)
         if not auraName then break end
         local lower = auraName:lower()
+        local detected = nil
         if lower:find("hardcore") then
-            if ProjectJaina_GameModes_CharDB then
-                ProjectJaina_GameModes_CharDB.hasSelectedMode = true
-                ProjectJaina_GameModes_CharDB.selectedMode = "HARDCORE"
-            end
-            return "HARDCORE"
+            detected = "HARDCORE"
         elseif lower:find("ironman") then
-            if ProjectJaina_GameModes_CharDB then
-                ProjectJaina_GameModes_CharDB.hasSelectedMode = true
-                ProjectJaina_GameModes_CharDB.selectedMode = "IRONMAN"
-            end
-            return "IRONMAN"
+            detected = "IRONMAN"
         elseif lower:find("die and rise") or lower:find("dierise") then
+            detected = "DIE_AND_RISE"
+        elseif lower:find("reto andino") or lower:find("slow_x1") or lower:find("reto x1") then
+            detected = "SLOW_X1"
+        end
+        if detected then
             if ProjectJaina_GameModes_CharDB then
                 ProjectJaina_GameModes_CharDB.hasSelectedMode = true
-                ProjectJaina_GameModes_CharDB.selectedMode = "DIE_AND_RISE"
+                ProjectJaina_GameModes_CharDB.selectedMode = detected
             end
-            return "DIE_AND_RISE"
+            return detected
         end
     end
     return "NORMAL"
@@ -206,15 +217,14 @@ end
 -- ================================================================
 -- SECCIÓN 1: BROADCAST DE ADDONS ACTIVOS
 -- ================================================================
-local function BuildMyAddonPayload()
+local function BuildActiveAddonLabels()
     local active = {}
     for _, entry in ipairs(C.Config.EcosystemAddons) do
         if IsAddonLoaded(entry.name) then
             table.insert(active, entry.label)
         end
     end
-    local mode = GetLocalGameMode()
-    return string.format("WP_ADDONS:%s|%s", table.concat(active, ","), mode)
+    return active, GetLocalGameMode()
 end
 
 local function BroadcastStatus()
@@ -223,17 +233,40 @@ local function BroadcastStatus()
     local targetChannel = GetGroupChannel()
     if not targetChannel then return end
 
-    local payload = BuildMyAddonPayload()
-    if #payload > 200 then return end  -- guardia estricta de 255 bytes
-
+    local prefix = C.Config.AddonPrefix or "JAINA_COMP"
     if RegisterAddonMessagePrefix then
-        RegisterAddonMessagePrefix(C.Config.AddonPrefix or "JAINA_COMP")
-        RegisterAddonMessagePrefix(C.Config.LegacyPrefix or "WP_COMP")
+        RegisterAddonMessagePrefix(prefix)
     end
 
-    SendAddonMessage(C.Config.AddonPrefix or "JAINA_COMP", payload, targetChannel)
-    if C.Config.LegacyPrefix then
-        SendAddonMessage(C.Config.LegacyPrefix, payload, targetChannel)
+    local active, mode = BuildActiveAddonLabels()
+    local fullPayload = string.format("JAINA_ADDONS:%s|%s", table.concat(active, ","), mode)
+    if #fullPayload <= MAX_ADDON_BODY_BYTES then
+        SendAddonMessage(prefix, fullPayload, targetChannel)
+        return
+    end
+
+    -- Troceado por límite exacto de WoW 3.3.5a (255B incluyendo prefijo) sin perder AddOns
+    local chunkBudget = MAX_ADDON_BODY_BYTES - 18 - (#mode + 1)
+    local chunks, current = {}, ""
+    for _, label in ipairs(active) do
+        local nextStr = (current == "") and label or (current .. "," .. label)
+        if #nextStr > chunkBudget and current ~= "" then
+            table.insert(chunks, current)
+            current = label
+        else
+            current = nextStr
+        end
+    end
+    if current ~= "" then
+        table.insert(chunks, current)
+    end
+
+    local total = #chunks
+    for idx, partCsv in ipairs(chunks) do
+        local pkt = string.format("JAINA_ADDONS_P:%d/%d:%s|%s", idx, total, partCsv, mode)
+        if #pkt <= 240 then
+            SendAddonMessage(prefix, pkt, targetChannel)
+        end
     end
 end
 
@@ -244,11 +277,34 @@ local responseJitterTimer = 0
 local responseJitterTarget = 0
 local responsePending = false
 
+local function CommitAddonList(sender, addonListCsv, mode)
+    local addons = {}
+    for label in (addonListCsv or ""):gmatch("[^,]+") do
+        addons[label] = true
+    end
+    groupAddonStatus[sender] = {
+        addons = addons,
+        mode   = NormalizeGameMode(mode),
+        time   = GetTime(),
+    }
+end
+
 local function ParseAddonMessage(sender, message)
     if not sender or sender == "" or not message then return end
     local myName = UnitName("player")
     local baseSender = sender:match("^[^-]+") or sender
     if baseSender == myName or sender == myName then return end
+
+    -- Purga y deduplicación anti-eco para emisores antiguos con doble prefijo
+    local now = GetTime()
+    for k, ts in pairs(recentAddonPackets) do
+        if (now - ts) > 5 then recentAddonPackets[k] = nil end
+    end
+    local dedupKey = baseSender .. "\0" .. message
+    if recentAddonPackets[dedupKey] and (now - recentAddonPackets[dedupKey]) < 0.30 then
+        return
+    end
+    recentAddonPackets[dedupKey] = now
 
     -- 1. Solicitud de escaneo P2P proveniente de un compañero de grupo/banda
     if message == "JAINA_SCAN_REQ" or message == "WP_SCAN_REQ" then
@@ -259,21 +315,44 @@ local function ParseAddonMessage(sender, message)
         return
     end
 
-    -- 2. Recepción de estado de un compañero
-    -- Formato esperado: "JAINA_ADDONS:<addon1>,<addon2>|<MODE>" o "WP_ADDONS:..."
-    local addonList, mode = message:match("^[A-Z_]+_ADDONS:([^|]*)|(.+)$")
-    if not addonList then return end
+    -- 2a. Recepción multiparte cuando la lista excede 220 bytes (21+ AddOns)
+    local idxStr, totalStr, partCsv, partMode = message:match("^[A-Z_]+_ADDONS_P:(%d+)/(%d+):([^|]*)|(.+)$")
+    if idxStr and totalStr then
+        local idx, total = tonumber(idxStr), tonumber(totalStr)
+        if idx and total and idx >= 1 and idx <= total and total <= 16 then
+            for s, st in pairs(pendingAddonChunks) do
+                if (now - st.ts) > 10 then pendingAddonChunks[s] = nil end
+            end
+            local buf = pendingAddonChunks[sender]
+            if not buf or buf.total ~= total then
+                buf = { total = total, received = 0, parts = {}, mode = partMode, ts = now }
+                pendingAddonChunks[sender] = buf
+            end
+            if not buf.parts[idx] then
+                buf.received = buf.received + 1
+            end
+            buf.parts[idx] = partCsv
+            buf.mode = partMode or buf.mode
+            buf.ts = now
 
-    local addons = {}
-    for label in addonList:gmatch("[^,]+") do
-        addons[label] = true
+            if buf.received >= buf.total then
+                local combined = {}
+                for i = 1, buf.total do
+                    if buf.parts[i] and buf.parts[i] ~= "" then
+                        table.insert(combined, buf.parts[i])
+                    end
+                end
+                pendingAddonChunks[sender] = nil
+                CommitAddonList(sender, table.concat(combined, ","), buf.mode)
+            end
+        end
+        return
     end
 
-    groupAddonStatus[sender] = {
-        addons = addons,
-        mode   = mode or "NORMAL",
-        time   = GetTime(),
-    }
+    -- 2b. Recepción de estado compacto en paquete único: "JAINA_ADDONS:..." o "WP_ADDONS:..."
+    local addonList, mode = message:match("^[A-Z_]+_ADDONS:([^|]*)|(.+)$")
+    if not addonList then return end
+    CommitAddonList(sender, addonList, mode)
 end
 
 local function RequestGroupScan()
@@ -283,19 +362,16 @@ local function RequestGroupScan()
         return
     end
 
+    local prefix = C.Config.AddonPrefix or "JAINA_COMP"
     if RegisterAddonMessagePrefix then
-        RegisterAddonMessagePrefix(C.Config.AddonPrefix or "JAINA_COMP")
-        RegisterAddonMessagePrefix(C.Config.LegacyPrefix or "WP_COMP")
+        RegisterAddonMessagePrefix(prefix)
     end
 
     -- Primero transmitimos nuestro estado
     BroadcastStatus()
 
-    -- Solicitamos a todos los clientes del grupo responder con el suyo
-    SendAddonMessage(C.Config.AddonPrefix or "JAINA_COMP", "JAINA_SCAN_REQ", targetChannel)
-    if C.Config.LegacyPrefix then
-        SendAddonMessage(C.Config.LegacyPrefix, "WP_SCAN_REQ", targetChannel)
-    end
+    -- Solicitamos a todos los clientes del grupo responder con el suyo en el prefijo canónico
+    SendAddonMessage(prefix, "JAINA_SCAN_REQ", targetChannel)
     CPrint("Escaneando addons del grupo (solicitud P2P enviada)...")
 end
 
@@ -808,8 +884,13 @@ eventFrame:SetScript("OnEvent", function(self, event, ...)
 
     elseif event == "PLAYER_ENTERING_WORLD" then
         if RegisterAddonMessagePrefix then
-            RegisterAddonMessagePrefix(C.Config.AddonPrefix)
+            RegisterAddonMessagePrefix(C.Config.AddonPrefix or "JAINA_COMP")
+            if C.Config.LegacyPrefix then
+                RegisterAddonMessagePrefix(C.Config.LegacyPrefix)
+            end
             RegisterAddonMessagePrefix("JAINA_PHASE_SYNC")
+            RegisterAddonMessagePrefix("JAINA_GAMEMODE")
+            RegisterAddonMessagePrefix("WP_GAMEMODE")
         end
         -- Solicitar estado de progresión temporal del reino al servidor
         local pName = UnitName("player")
@@ -835,13 +916,14 @@ eventFrame:SetScript("OnEvent", function(self, event, ...)
         if (prefix == "JAINA_GAMEMODE" or prefix == "WP_GAMEMODE") and message then
             local mode = message:match("^STATUS:([^:]+)") or message:match("^ACK:([^:]+)")
             if mode then
+                local normMode = NormalizeGameMode(mode)
                 if ProjectJaina_GameModes_CharDB then
-                    if mode == "NONE" then
+                    if normMode == "NONE" then
                         ProjectJaina_GameModes_CharDB.hasSelectedMode = false
                         ProjectJaina_GameModes_CharDB.selectedMode = nil
                     else
                         ProjectJaina_GameModes_CharDB.hasSelectedMode = true
-                        ProjectJaina_GameModes_CharDB.selectedMode = mode
+                        ProjectJaina_GameModes_CharDB.selectedMode = normMode
                     end
                 end
                 BroadcastStatus()
